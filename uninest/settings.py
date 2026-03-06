@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -117,6 +118,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# 在文件末尾添加或修改：
+AUTH_USER_MODEL = 'properties.User'  # 关键：指向自定义模型
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = "/"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 在控制台查看邮件内容，方便测试重置链接
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -1,0 +1,145 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ property.title }}{% endblock %}
+
+{% block extra_css %}
+/* 1. 核心需求：黑色背景 */
+.iphone-screen { 
+    background-color: #000; 
+    color: #fff; 
+    /* 确保容器本身是滚动承载者 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 顶部返回导航栏 - 设为粘性置顶 */
+.back-nav {
+    position: sticky; /* 关键：粘性定位 */
+    top: 0;           /* 粘在顶部 */
+    z-index: 1000;    /* 保证在图片上方 */
+    padding: 15px 20px;
+    background: #000; 
+    border-bottom: 1px solid #222;
+}
+
+/* 房源大图 - 保持原样 */
+.detail-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+/* 描述文字框 */
+.description-box {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 10px;
+    color: #ccc;
+}
+
+/* 底部操作栏 - 设为粘性置底 */
+.bottom-bar-dark {
+    position: sticky; /* 关键：粘性定位 */
+    bottom: 0;        /* 粘在底部 */
+    z-index: 1000;
+    background-color: #111;
+    border-top: 1px solid #333;
+    width: 100%;
+    padding: 15px 0;
+}
+
+.price-tag { color: #b080f4; font-size: 1.8rem; font-weight: bold; }
+{% endblock %}
+
+{% block content %}
+<!-- 1. 顶部固定 -->
+<div class="back-nav">
+    <a href="{% url 'home' %}" class="text-white text-decoration-none fw-bold d-flex align-items-center">
+        <span style="font-size: 1.5rem; margin-right: 8px;">‹</span> 
+        <span>Back to List</span>
+    </a>
+</div>
+
+<!-- 2. 中间滚动内容 (图片 + 文字) -->
+{% if property.image %}
+    <img src="{{ property.image.url }}" class="detail-img">
+{% endif %}
+
+<div class="container py-4 px-4">
+    <h1 class="fw-bold mb-3">{{ property.title }}</h1>
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+            <!-- 周租金 -->
+            <span class="price-tag">£{{ property.price }}</span>
+            <span class="text-secondary small">/ week</span>
+            
+            <!-- 月租金转换显示 -->
+            <div style="font-size: 0.90rem; color: #949090; margin-top: 6px; font-weight: 300;">
+                Approx. <strong class="text-light">£{{ property.price_pcm }}</strong> per month (PCM)
+            </div>
+        </div>
+        <span class="badge bg-light text-dark rounded-pill px-3 py-2">Zip: {{ property.zip_code }}</span>
+    </div>
+
+    <h5 class="fw-bold mb-2">Description</h5>
+    <div class="description-box">
+        {{ property.description|linebreaks }}
+    </div>
+    
+    <!-- 增加一个占位符，防止内容被底部固定栏挡住 -->
+    <div style="height: 40px;"></div>
+</div>
+<style>
+    /* 新增点赞图标样式 */
+    .like-btn {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 1.5rem;
+        transition: transform 0.2s;
+        padding: 0 10px;
+    }
+    .like-btn.active {
+        color: #ff4757; /* 点赞后的红色 */
+    }
+    .like-count {
+        font-size: 0.7rem;
+        color: #888;
+        display: block;
+        margin-top: -5px;
+    }
+</style>
+<div class="bottom-bar-dark">
+  <div class="container d-flex align-items-center gap-2 px-4">
+    
+    <!-- 1. 点赞按钮 (Form 提交) -->
+    <div class="text-center">
+        <form action="{% url 'toggle_like' property.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="like-btn {% if is_liked %}active{% endif %}">
+                {% if is_liked %}❤️{% else %}🖤{% endif %}
+            </button>
+        </form>
+        <span class="like-count">{{ like_count }}</span>
+    </div>
+
+    <!-- 1. 真正的收藏按钮 -->
+    <form action="{% url 'toggle_collection' property.id %}" method="post" class="flex-grow-1">
+        {% csrf_token %}
+        <button type="submit" class="btn {% if is_collected %}btn-warning{% else %}btn-outline-light{% endif %} w-100 rounded-pill py-2 small" 
+                style="font-size: 0.8rem; border-radius: 20px;">
+            {% if is_collected %}⭐ Collected{% else %}Collect{% endif %}
+        </button>
+    </form>
+    
+    <!-- 3. 联系中介按钮 -->
+    <button class="btn flex-grow-1 rounded-pill py-2 fw-bold small" 
+            style="background-color: #b080f4; color: white; border: none; font-size: 0.8rem;">
+        Contact Agency
+    </button>
+    
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Likes - UniNest{% endblock %}
+
+{% block extra_css %}
+/* 保持黑色主题 */
+.iphone-screen { background-color: #111; color: white; }
+
+.header-nav {
+    padding: 20px;
+    background: #1a1a1a;
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+{% endblock %}
+
+{% block content %}
+<div class="header-nav d-flex align-items-center">
+    <a href="{% url 'home' %}" class="text-white text-decoration-none me-3">←</a>
+    <h4 class="fw-bold mb-0">My Collections ⭐</h4>
+</div>
+
+<div class="container mt-4 mb-5 px-3">
+    <div class="row">
+        {% for p in properties %}
+        <div class="col-6 mb-3">
+            <div class="card bg-dark text-white border-secondary h-100">
+                <a href="{% url 'property_detail' p.id %}" class="text-white text-decoration-none">
+                    {% if p.image %}
+                    <img src="{{ p.image.url }}" class="card-img-top" style="height:120px; object-fit:cover;">
+                    {% else %}
+                    <div style="height:120px; background:#444;" class="d-flex align-items-center justify-content-center small text-muted">No Image</div>
+                    {% endif %}
+
+                    <div class="card-body p-2">
+                        <h6 style="font-size: 0.8rem;" class="mb-1 text-truncate">{{ p.title }}</h6>
+                        <div class="text-warning fw-bold" style="font-size: 0.85rem;">£{{ p.price }} <small class="text-secondary fw-normal">pw</small></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center mt-5 py-5">
+            <span style="font-size: 3rem;">⭐</span>
+            <p class="text-secondary mt-3">Your collection is empty.</p>
+            <a href="{% url 'home' %}" class="btn btn-sm btn-light rounded-pill px-4">Find Properties</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div style="height: 60px;"></div>
+{% endblock %}

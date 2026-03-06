@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Post New Property{% endblock %}
+
+{% block extra_css %}
+.iphone-screen { background-color: #f4f4f7; }
+.form-card {
+    margin: 20px;
+    background: white;
+    padding: 25px;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.form-control {
+    border-radius: 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="p-3">
+    <div class="d-flex align-items-center mb-4">
+        <a href="{% url 'home' %}" class="text-dark text-decoration-none me-3">←</a>
+        <h3 class="fw-bold mb-0">Post Property</h3>
+    </div>
+
+    <div class="form-card">
+        <!-- 核心：上传图片必须添加 enctype="multipart/form-data" -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label small fw-bold">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-dark w-100 py-3 rounded-4 fw-bold mt-3">
+                List Property Now
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
