@@ -1,11 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.contrib.auth.models import User
 
 
 class User(AbstractUser):
-    # 定义角色常量
     ROLE_CHOICES = (
         ('user', 'Student User'),
         ('agency', 'Agency'),
@@ -18,21 +15,18 @@ class Property(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     price = models.IntegerField(verbose_name="Price (£/week)")
-    
     zip_code = models.CharField(max_length=10)
     image = models.ImageField(upload_to="properties/", blank=True, null=True)
-
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
     @property
     def price_pcm(self):
-        """计算月租金 (Per Calendar Month)"""
-        # 公式：周租金 * 52 / 12
         return round((self.price * 52) / 12)
+
     def __str__(self):
         return self.title
-    
-# properties/models.py
+
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,10 +34,8 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'property') # 确保一个用户只能给一个房源点一个赞
+        unique_together = ('user', 'property')
 
-
-# properties/models.py
 
 class Collection(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -51,7 +43,31 @@ class Collection(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'property') # 防止重复收藏
+        unique_together = ('user', 'property')
 
     def __str__(self):
         return f"{self.user.username} collected {self.property.title}"
+
+
+class Review(models.Model):
+    RATING_CHOICES = (
+        (1, "1 Star"),
+        (2, "2 Stars"),
+        (3, "3 Stars"),
+        (4, "4 Stars"),
+        (5, "5 Stars"),
+    )
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(max_length=300)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('user', 'property')
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.property.title} ({self.rating}/5)"
