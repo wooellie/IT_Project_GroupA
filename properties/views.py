@@ -8,17 +8,31 @@ from .forms import PropertyForm, ReviewForm
 
 
 def home(request):
+
     query = request.GET.get('q')
+    sort = request.GET.get('sort')
+
+    properties = Property.objects.all()
+
     if query:
-        properties = Property.objects.filter(
-            zip_code__icontains=query
-        ).order_by("-created_at")
+        properties = properties.filter(zip_code__icontains=query)
+
+    if sort == "oldest":
+        properties = properties.order_by("created_at")
+
+    elif sort == "price_low":
+        properties = properties.order_by("price")
+
+    elif sort == "price_high":
+        properties = properties.order_by("-price")
+
     else:
-        properties = Property.objects.all().order_by("-created_at")
+        properties = properties.order_by("-created_at")
 
     return render(request, "home.html", {
         "properties": properties,
-        "query": query
+        "query": query,
+        "sort": sort
     })
 
 
