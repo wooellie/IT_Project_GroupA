@@ -19,6 +19,10 @@ class Property(models.Model):
     image = models.ImageField(upload_to="properties/", blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    address = models.CharField(max_length=255, blank=True)
+    area = models.CharField(max_length=100, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     @property
     def price_pcm(self):

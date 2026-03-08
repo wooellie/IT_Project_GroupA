@@ -7,32 +7,42 @@ from .models import Property, User, Like, Collection, Review
 from .forms import PropertyForm, ReviewForm
 
 
-def home(request):
+from django.db.models import Avg
 
-    query = request.GET.get('q')
-    sort = request.GET.get('sort')
+def home(request):
+    query = request.GET.get('q', '').strip()
+    search_by = request.GET.get('search_by', 'postcode')
+    filter_by = request.GET.get('filter_by', '')
 
     properties = Property.objects.all()
 
+    # Search logic
     if query:
-        properties = properties.filter(zip_code__icontains=query)
+        if search_by == 'postcode':
+            properties = properties.filter(zip_code__icontains=query)
+        elif search_by == 'title':
+            properties = properties.filter(title__icontains=query)
+        elif search_by == 'agency':
+            properties = properties.filter(owner__username__icontains=query)
 
-    if sort == "oldest":
-        properties = properties.order_by("created_at")
+    # Rating annotation for rating filter
+    properties = properties.annotate(avg_review_rating=Avg('reviews__rating'))
 
-    elif sort == "price_low":
-        properties = properties.order_by("price")
-
-    elif sort == "price_high":
-        properties = properties.order_by("-price")
-
+    # Filter logic
+    if filter_by == 'price_low':
+        properties = properties.order_by('price')
+    elif filter_by == 'price_high':
+        properties = properties.order_by('-price')
+    elif filter_by == 'rating_high':
+        properties = properties.order_by('-avg_review_rating', '-created_at')
     else:
-        properties = properties.order_by("-created_at")
+        properties = properties.order_by('-created_at')
 
     return render(request, "home.html", {
         "properties": properties,
         "query": query,
-        "sort": sort
+        "search_by": search_by,
+        "filter_by": filter_by,
     })
 
 

@@ -5,7 +5,7 @@ from .models import Property, Review
 class PropertyForm(forms.ModelForm):
     class Meta:
         model = Property
-        fields = ['title', 'description', 'price', 'zip_code', 'image']
+        fields = ['title', 'description', 'price', 'zip_code', 'address', 'area', 'image']
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -23,6 +23,14 @@ class PropertyForm(forms.ModelForm):
             'zip_code': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'e.g. G12 8QQ'
+            }),
+            'address': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter address'
+            }),
+            'area': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Enter area'
             }),
             'image': forms.FileInput(attrs={
                 'class': 'form-control'

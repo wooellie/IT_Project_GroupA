@@ -9,6 +9,33 @@
 .content-area {
     padding-bottom: 80px;
 }
+
+.search-title {
+    color: #00d26a;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.search-box {
+    background-color: #000;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 18px;
+}
+
+.search-label {
+    color: #d8ccf0;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.form-control-sm,
+.form-select-sm {
+    border-radius: 12px;
+}
 {% endblock %}
 
 {% block content %}
@@ -39,33 +66,54 @@
 
     <div class="container mt-4">
 
-        <form method="GET" action="{% url 'home' %}" class="row mb-4 gx-2">
-            <div class="col-4">
-                <input
-                    name="q"
-                    type="text"
-                    value="{{ query|default:'' }}"
-                    class="form-control form-control-sm"
-                    placeholder="Search by zip">
-            </div>
+        <div class="search-title">Multi-Criteria Search & Filtering</div>
 
-            <div class="col-4">
-                <select name="sort" class="form-select form-select-sm">
-                    <option value="">Newest</option>
-                    <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
-                    <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price Low → High</option>
-                    <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price High → Low</option>
-                </select>
-            </div>
+        <div class="search-box">
+            <form method="GET" action="{% url 'home' %}">
 
-            <div class="col-2">
-                <button type="submit" class="btn btn-secondary btn-sm w-100">Search</button>
-            </div>
+                <div class="mb-3">
+                    <label class="search-label">User Input</label>
+                    <input
+                        name="q"
+                        type="text"
+                        value="{{ query|default:'' }}"
+                        class="form-control form-control-sm"
+                        placeholder="Enter postcode, address, area or agency name">
+                </div>
 
-            <div class="col-2">
-                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
-            </div>
-        </form>
+                <div class="row gx-2 mb-3">
+                    <div class="col-6">
+                        <label class="search-label">Search By</label>
+                        <select name="search_by" class="form-select form-select-sm">
+                            <option value="postcode" {% if search_by == 'postcode' %}selected{% endif %}>Postcode</option>
+                            <option value="address" {% if search_by == 'address' %}selected{% endif %}>Address</option>
+                            <option value="area" {% if search_by == 'area' %}selected{% endif %}>Area</option>
+                            <option value="agency" {% if search_by == 'agency' %}selected{% endif %}>Agency Name</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="search-label">Filter By</label>
+                        <select name="filter_by" class="form-select form-select-sm">
+                            <option value="" {% if not filter_by %}selected{% endif %}>Newest</option>
+                            <option value="price_low" {% if filter_by == 'price_low' %}selected{% endif %}>Price Low → High</option>
+                            <option value="price_high" {% if filter_by == 'price_high' %}selected{% endif %}>Price High → Low</option>
+                            <option value="rating_high" {% if filter_by == 'rating_high' %}selected{% endif %}>Rating</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row gx-2">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-secondary btn-sm w-100">Apply</button>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
 
         <div class="row">
             {% for p in properties %}
@@ -84,18 +132,33 @@
 
                         <div class="card-body p-2 text-center">
                             <h6 style="font-size: 0.9rem;" class="mb-0 text-truncate">{{ p.title }}</h6>
+
+                            {% if p.address %}
+                                <div class="small text-light text-truncate">{{ p.address }}</div>
+                            {% endif %}
+
+                            {% if p.area %}
+                                <div class="small text-secondary text-truncate">{{ p.area }}</div>
+                            {% endif %}
+
                             <div class="text-warning small">
                                 £{{ p.price }} <span style="font-size: 0.7rem;">pw</span>
                                 <span class="text-secondary">|</span>
                                 £{{ p.price_pcm }} <span style="font-size: 0.7rem;">pcm</span>
                             </div>
+
+                            {% if p.avg_review_rating %}
+                                <div class="small text-info">
+                                    Rating: {{ p.avg_review_rating|floatformat:1 }}/5
+                                </div>
+                            {% endif %}
                         </div>
                     </a>
                 </div>
             </div>
             {% empty %}
             <div class="col-12 text-center mt-5 text-secondary">
-                <p>No available listings at the moment.</p>
+                <p>No available listings found.</p>
             </div>
             {% endfor %}
         </div>
