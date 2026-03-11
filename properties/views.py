@@ -8,18 +8,42 @@ from .forms import PropertyForm, ReviewForm, UserProfileForm, AgencyProfileForm
 from django.conf import settings
 
 
+from django.db.models import Avg
+
 def home(request):
-    query = request.GET.get('q')
+    query = request.GET.get('q', '').strip()
+    search_by = request.GET.get('search_by', 'postcode')
+    filter_by = request.GET.get('filter_by', '')
+
+    properties = Property.objects.all()
+
+    # Search logic
     if query:
-        properties = Property.objects.filter(
-            zip_code__icontains=query
-        ).order_by("-created_at")
+        if search_by == 'postcode':
+            properties = properties.filter(zip_code__icontains=query)
+        elif search_by == 'title':
+            properties = properties.filter(title__icontains=query)
+        elif search_by == 'agency':
+            properties = properties.filter(owner__username__icontains=query)
+
+    # Rating annotation for rating filter
+    properties = properties.annotate(avg_review_rating=Avg('reviews__rating'))
+
+    # Filter logic
+    if filter_by == 'price_low':
+        properties = properties.order_by('price')
+    elif filter_by == 'price_high':
+        properties = properties.order_by('-price')
+    elif filter_by == 'rating_high':
+        properties = properties.order_by('-avg_review_rating', '-created_at')
     else:
-        properties = Property.objects.all().order_by("-created_at")
+        properties = properties.order_by('-created_at')
 
     return render(request, "home.html", {
         "properties": properties,
-        "query": query
+        "query": query,
+        "search_by": search_by,
+        "filter_by": filter_by,
     })
 
 

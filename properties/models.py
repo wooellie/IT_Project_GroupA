@@ -19,11 +19,16 @@ class Property(models.Model):
     image = models.ImageField(upload_to="images/", blank=True, null=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    address = models.CharField(max_length=255, blank=True)
+    area = models.CharField(max_length=100, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     address = models.CharField(max_length=300, blank=True, verbose_name="Full Address")
     latitude = models.DecimalField(max_digits=9, decimal_places=7, null=True, blank=True, verbose_name="Latitude")
     longitude = models.DecimalField(max_digits=10, decimal_places=7, null=True, blank=True, verbose_name="Longitude")
     distance_from_campus = models.CharField(max_length=50, blank=True, verbose_name="Distance from Campus")
+    area = models.CharField(max_length=100, blank=True, null=True)
 
     @property
     def price_pcm(self):

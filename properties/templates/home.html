@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block extra_css %}
+<style>
 /* 针对 Home 页面的特殊背景颜色 */
 .iphone-screen { background-color: #111; color: white; }
 /* 确保内容不被底部栏遮挡 */
@@ -22,13 +23,73 @@
     justify-content: center;
 }
 
+
+/* 针对 Home 页面的特殊背景颜色 */
+.iphone-screen { background-color: #111; color: white; }
+/* 确保内容不被底部栏遮挡 */
+.content-area { padding-bottom: 80px; } 
+.iphone-screen {
+    background-color: #111;
+    color: white;
+}
+
+.content-area {
+    padding-bottom: 80px;
+}
+
+.search-title {
+    color: #00d26a;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.search-box {
+    background-color: #000;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 18px;
+}
+
+.search-label {
+    color: #d8ccf0;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.form-control-sm,
+.form-select-sm {
+    border-radius: 12px;
+}
+
+.container-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: #6c757d;
+    max-width: 430px;
+    margin: 0 auto;
+}
+</style>
 {% endblock %}
 
 {% block content %}
 <!-- Avatar/username click redirects to dashboard-->
 <div class="content-area">
+
+    <!-- 导航栏 -->
+
+
     <nav class="navbar navbar-dark bg-dark px-4">
         <div class="d-flex align-items-center gap-3">
+
+            <div class="bg-secondary rounded-circle" style="width:35px;height:35px;"></div>
+            <div class="bg-secondary rounded-circle" style="width:35px;height:35px;"></div>
+
             {% if user.is_authenticated %}
                 <a href="{% url 'dashboard_redirect' %}" class="text-decoration-none d-flex align-items-center gap-2">
                     {% if user.role == 'user' %}
@@ -60,7 +121,7 @@
                 <span class="text-white">Please log in</span>
             {% endif %}
         </div>
-        
+
         {% if not user.is_authenticated %}
         <div class="d-flex gap-2">
             <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm">New Account</a>
@@ -69,86 +130,130 @@
         {% endif %}
     </nav>
 
-   <!-- home.html 搜索与过滤区域修改 -->
     <div class="container mt-4">
-        <!-- 将搜索框包裹在 form 标签中，method 必须是 GET -->
-        <form method="GET" action="{% url 'home' %}" class="row mb-4 gx-2">
-            <div class="col-6">
-                <!-- name="q" 必须与 views.py 中的 request.GET.get('q') 对应 -->
-                <input name="q" type="text" value="{{ query|default:'' }}" 
-                    class="form-control form-control-sm" placeholder="Search/Filter by ...">
-            </div>
-            <div class="col-3">
-                <button type="submit" class="btn btn-secondary btn-sm w-100">Search</button>
-            </div>
-            <div class="col-3">
-                <!-- Filter 目前可以先作为重置按钮或占位 -->
-                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
-            </div>
-        </form>
-        ...
-    </div>
 
-        <!-- 房源列表 -->
+        <div class="search-title">Multi-Criteria Search & Filtering</div>
+
+        <div class="search-box">
+            <form method="GET" action="{% url 'home' %}">
+
+                <div class="mb-3">
+                    <label class="search-label">User Input</label>
+                    <input
+                        name="q"
+                        type="text"
+                        value="{{ query|default:'' }}"
+                        class="form-control form-control-sm"
+                        placeholder="Enter postcode, address, area or agency name">
+                </div>
+
+                <div class="row gx-2 mb-3">
+                    <div class="col-6">
+                        <label class="search-label">Search By</label>
+                        <select name="search_by" class="form-select form-select-sm">
+                            <option value="postcode" {% if search_by == 'postcode' %}selected{% endif %}>Postcode</option>
+                            <option value="address" {% if search_by == 'address' %}selected{% endif %}>Address</option>
+                            <option value="area" {% if search_by == 'area' %}selected{% endif %}>Area</option>
+                            <option value="agency" {% if search_by == 'agency' %}selected{% endif %}>Agency Name</option>
+                        </select>
+                    </div>
+
+                    <div class="col-6">
+                        <label class="search-label">Filter By</label>
+                        <select name="filter_by" class="form-select form-select-sm">
+                            <option value="" {% if not filter_by %}selected{% endif %}>Newest</option>
+                            <option value="price_low" {% if filter_by == 'price_low' %}selected{% endif %}>Price Low → High</option>
+                            <option value="price_high" {% if filter_by == 'price_high' %}selected{% endif %}>Price High → Low</option>
+                            <option value="rating_high" {% if filter_by == 'rating_high' %}selected{% endif %}>Rating</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row gx-2">
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-secondary btn-sm w-100">Apply</button>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">Clear</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
         <div class="row">
             {% for p in properties %}
-            <div class="col-6 mb-3"> <!-- 手机版建议一行显示两个 (col-6) -->
+            <div class="col-6 mb-3">
                 <div class="card bg-dark text-white border-secondary h-100">
-                    <a href="{% if user.is_authenticated %}{% url 'property_detail' p.id %}{% else %}{% url 'login' %}?next={% url 'property_detail' p.id %}{% endif %}" 
+                    <a href="{% if user.is_authenticated %}{% url 'property_detail' p.id %}{% else %}{% url 'login' %}?next={% url 'property_detail' p.id %}{% endif %}"
                        class="text-white text-decoration-none">
-                        
+
                         {% if p.image %}
-                        <img src="{{ p.image.url }}" class="card-img-top" style="height:120px; object-fit:cover;">
+                            <img src="{{ p.image.url }}" class="card-img-top" style="height:120px; object-fit:cover;">
                         {% else %}
-                        <div style="height:120px; background:#444;" class="d-flex align-items-center justify-content-center small text-muted">No Image</div>
+                            <div style="height:120px; background:#444;" class="d-flex align-items-center justify-content-center small text-muted">
+                                No Image
+                            </div>
                         {% endif %}
 
                         <div class="card-body p-2 text-center">
                             <h6 style="font-size: 0.9rem;" class="mb-0 text-truncate">{{ p.title }}</h6>
-                            <!-- 修改这里：显示 pw 和 pcm -->
+
+                            {% if p.address %}
+                                <div class="small text-light text-truncate">{{ p.address }}</div>
+                            {% endif %}
+
+                            {% if p.area %}
+                                <div class="small text-secondary text-truncate">{{ p.area }}</div>
+                            {% endif %}
+
                             <div class="text-warning small">
-                                £{{ p.price }} <span style="font-size: 0.7rem;">pw</span> 
-                                <span class="text-secondary">|</span> 
+                                £{{ p.price }} <span style="font-size: 0.7rem;">pw</span>
+                                <span class="text-secondary">|</span>
                                 £{{ p.price_pcm }} <span style="font-size: 0.7rem;">pcm</span>
                             </div>
+
+                            {% if p.avg_review_rating %}
+                                <div class="small text-info">
+                                    Rating: {{ p.avg_review_rating|floatformat:1 }}/5
+                                </div>
+                            {% endif %}
                         </div>
                     </a>
                 </div>
             </div>
             {% empty %}
-                <!-- 如果看不到房源，会显示下面这段话 -->
-                <div class="col-12 text-center mt-5 text-secondary">
-                    <p>No available listings at the moment. Please post your question to be the first to comment!</p>
-                    <!-- <p class="small">Please add some in Django Admin!</p> -->
-                </div>
+            <div class="col-12 text-center mt-5 text-secondary">
+                <p>No available listings found.</p>
+            </div>
             {% endfor %}
         </div>
+
     </div>
 </div>
 
-<!-- 统一的底部操作栏 -->
 <div class="container-bottom-bar bg-secondary py-2 border-top border-dark">
-    <!-- 1. 将 justify-content-between 改为 justify-content-center 实现居中 -->
-    <!-- 2. 使用 gap-2 设置按钮间距（Bootstrap中 gap-3通常是1rem，gap-2约为0.5rem，适合实现“2/3”的视觉感） -->
     <div class="container d-flex justify-content-center gap-4 px-3">
-        
-        <!-- Post Property -->
-        <a href="{% if user.is_authenticated and user.role == 'agency' %}{% url 'post_property' %}{% else %}{% url 'login' %}?next={% url 'post_property' %}{% endif %}" 
-           class="btn btn-sm fw-bold" style="background-color: #CBC3E3; color: rgb(12, 11, 11); border: none;">Post</a>
 
+        <a href="{% if user.is_authenticated and user.role == 'agency' %}{% url 'post_property' %}{% else %}{% url 'login' %}?next={% url 'post_property' %}{% endif %}"
+           class="btn btn-sm fw-bold"
+           style="background-color: #CBC3E3; color: rgb(12, 11, 11); border: none;">
+            Post
+        </a>
 
+        <a href="{% if user.is_authenticated %}{% url 'my_likes' %}{% else %}{% url 'login' %}?next={% url 'my_likes' %}{% endif %}"
+           class="btn btn-light btn-sm fw-bold"
+           style="background-color: #CBC3E3; color: rgb(12, 11, 11); border: none;">
+            Likes
+        </a>
 
-        <!-- My Likes -->
-        <a href="{% if user.is_authenticated %}{% url 'my_likes' %}{% else %}{% url 'login' %}?next={% url 'my_likes' %}{% endif %}" 
-           class="btn btn-light btn-sm fw-bold" style="background-color: #CBC3E3; color: rgb(12, 11, 11); border: none;">Likes</a>
+        <a href="{% if user.is_authenticated %}{% url 'my_collection' %}{% else %}{% url 'login' %}?next={% url 'my_collection' %}{% endif %}"
+           class="btn btn-sm fw-bold"
+           style="background-color: #CBC3E3; color: rgb(12, 11, 11); border: none;">
+            Collection
+        </a>
 
- 
-
-        <!-- My Collection -->
-        <a href="{% if user.is_authenticated %}{% url 'my_collection' %}{% else %}{% url 'login' %}?next={% url 'my_collection' %}{% endif %}" 
-           class="btn btn-sm fw-bold" style="background-color: #CBC3E3; color: rgb(12, 11, 11); border: none;">Collection</a>
     </div>
 </div>
-
 
 {% endblock %}
