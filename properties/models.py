@@ -111,11 +111,11 @@ class AgencyProfile(models.Model):
 
     def get_total_properties(self):
         """Get total number of properties posted by this agency"""
-        return Property.objects.filter(owner=self.user).count()
+        return Property.objects.filter(user=self.user).count()
 
     def get_avg_rating(self):
         """Calculate average rating of all properties from this agency"""
-        properties = Property.objects.filter(owner=self.user)
+        properties = Property.objects.filter(user=self.user)
         if not properties.exists():
             return 0
         

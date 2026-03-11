@@ -24,7 +24,7 @@ def home(request):
         elif search_by == 'title':
             properties = properties.filter(title__icontains=query)
         elif search_by == 'agency':
-            properties = properties.filter(owner__username__icontains=query)
+            properties = properties.filter(user__username__icontains=query)
 
     # Rating annotation for rating filter
     properties = properties.annotate(avg_review_rating=Avg('reviews__rating'))
@@ -108,7 +108,7 @@ def post_property(request):
         form = PropertyForm(request.POST, request.FILES)
         if form.is_valid():
             new_prop = form.save(commit=False)
-            new_prop.owner = request.user
+            new_prop.user = request.user
             new_prop.save()
             messages.success(request, "Property posted successfully!")
             return redirect('home')
@@ -265,7 +265,7 @@ def agency_dashboard(request):
 
     profile, created = AgencyProfile.objects.get_or_create(user=request.user)
     
-    properties = Property.objects.filter(owner=request.user).order_by('-created_at')
+    properties = Property.objects.filter(user=request.user).order_by('-created_at')
     
     total_properties = properties.count()
     avg_rating = profile.get_avg_rating()
