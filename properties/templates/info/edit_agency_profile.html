@@ -1,0 +1,304 @@
+{% extends 'base/base.html' %}
+
+{% block extra_css %}
+<style>
+    .edit-container {
+        padding: 0;
+        background: #fff;
+        color: #000;
+    }
+    
+    .page-header {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        border-bottom: 2px solid #b080f4;
+    }
+    
+    .back-btn {
+        color: #b080f4;
+        text-decoration: none;
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 1;
+    }
+    
+    .page-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+        letter-spacing: -0.3px;
+    }
+    
+    .edit-content {
+        padding: 20px;
+    }
+    
+    .avatar-preview-section {
+        text-align: center;
+        margin-bottom: 25px;
+        padding: 30px 20px;
+        background: #f5f5f7;
+        border-radius: 16px;
+    }
+    
+    .current-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 15px;
+        display: block;
+    }
+    
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #b080f4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: white;
+        margin: 0 auto 15px;
+    }
+    
+    .avatar-label {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+    
+    #avatar-preview {
+        display: none;
+        margin-top: 15px;
+    }
+    
+    #avatar-preview img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    
+    #avatar-preview p {
+        color: #b080f4;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-label {
+        display: block;
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 14px;
+        background: #f5f5f7;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        color: #000;
+        font-size: 15px;
+        box-sizing: border-box;
+        font-weight: 500;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #b080f4;
+        background: #fff;
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+    }
+    
+    .file-input-wrapper input[type=file] {
+        position: absolute;
+        left: -9999px;
+    }
+    
+    .file-input-label {
+        display: block;
+        padding: 14px;
+        background: #f5f5f7;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        color: #666;
+        cursor: pointer;
+        text-align: center;
+        font-weight: 500;
+        font-size: 15px;
+    }
+    
+    .file-input-label:hover {
+        border-color: #b080f4;
+        background: #fff;
+        color: #b080f4;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+    }
+    
+    .btn {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #b080f4, #9060d4);
+        color: white;
+    }
+    
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #666;
+    }
+    
+    .messages {
+        margin-bottom: 20px;
+    }
+    
+    .alert {
+        padding: 14px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-container">
+    <div class="page-header">
+        <a href="{% url 'agency_dashboard' %}" class="back-btn">←</a>
+        <div class="page-title">Edit Agency Profile</div>
+    </div>
+    
+    <div class="edit-content">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="avatar-preview-section">
+            <div class="avatar-label">Current Logo/Avatar</div>
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Avatar" class="current-avatar">
+            {% else %}
+                <div class="avatar-circle">🏢</div>
+            {% endif %}
+            
+            <div id="avatar-preview">
+                <p>New Logo Preview:</p>
+                <img src="" alt="Preview">
+            </div>
+        </div>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label class="form-label">Upload New Logo/Avatar</label>
+                <div class="file-input-wrapper">
+                    {{ form.avatar }}
+                    <label for="id_avatar" class="file-input-label">
+                        📷 Choose Image
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Agency Name</label>
+                {{ form.agency_name }}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Contact Phone</label>
+                {{ form.phone }}
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Office Address</label>
+                {{ form.office_address }}
+            </div>
+            
+            <div class="button-group">
+                <a href="{% url 'agency_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.getElementById('id_avatar');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('avatar-preview');
+                    preview.style.display = 'block';
+                    preview.querySelector('img').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

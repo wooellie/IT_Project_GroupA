@@ -5,24 +5,62 @@
 .iphone-screen { background-color: #111; color: white; }
 /* 确保内容不被底部栏遮挡 */
 .content-area { padding-bottom: 80px; } 
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 {% endblock %}
 
 {% block content %}
+<!-- Avatar/username click redirects to dashboard-->
 <div class="content-area">
-    <!-- 导航栏 -->
     <nav class="navbar navbar-dark bg-dark px-4">
         <div class="d-flex align-items-center gap-3">
-            <div class="bg-secondary rounded-circle" style="width:35px;height:35px;"></div>
             {% if user.is_authenticated %}
-                <span>{{ user.username }}</span>
-                <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                <a href="{% url 'dashboard_redirect' %}" class="text-decoration-none d-flex align-items-center gap-2">
+                    {% if user.role == 'user' %}
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="user-avatar">
+                        {% else %}
+                            <div class="avatar-circle bg-success text-white fw-bold" style="font-size:16px;">
+                                {{ user.username.0|upper }}
+                            </div>
+                        {% endif %}
+                    {% elif user.role == 'agency' %}
+                        {% if user.agency_profile.avatar %}
+                            <img src="{{ user.agency_profile.avatar.url }}" alt="Avatar" class="user-avatar">
+                        {% else %}
+                            <div class="avatar-circle" style="background:#2196F3; font-size:18px;">🏢</div>
+                        {% endif %}
+                    {% else %}
+                        <div class="avatar-circle bg-secondary"></div>
+                    {% endif %}
+                    <span class="text-white">{{ user.username }}</span>
+                </a>
+                
+                <form method="post" action="{% url 'logout' %}" class="ms-2">
                     {% csrf_token %}
-                    <button class="btn btn-outline-light btn-sm ms-2">Logout</button>
+                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                 </form>
             {% else %}
-                <span>Please log in</span>
+                <div class="avatar-circle bg-secondary"></div>
+                <span class="text-white">Please log in</span>
             {% endif %}
         </div>
+        
         {% if not user.is_authenticated %}
         <div class="d-flex gap-2">
             <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm">New Account</a>

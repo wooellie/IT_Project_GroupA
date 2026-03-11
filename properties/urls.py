@@ -27,6 +27,8 @@ urlpatterns = [
     path('my-collection/', views.my_collection, name='my_collection'),
     path('user-info/', views.user_info, name='user_info'),
     path('agency-info/', views.agency_info, name='agency_info'),
+    path('profile/edit/', views.edit_user_profile, name='edit_user_profile'),
+    path('profile/agency/edit/', views.edit_agency_profile, name='edit_agency_profile'),
 
     # 1. 发起重置请求页面
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password/password_reset_form.html'), name='password_reset'),

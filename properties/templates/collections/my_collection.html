@@ -18,7 +18,11 @@
 
 {% block content %}
 <div class="header-nav d-flex align-items-center">
-    <a href="{% url 'home' %}" class="text-white text-decoration-none me-3">←</a>
+    {% if request.GET.from == 'dashboard' %}
+        <a href="{% url 'user_dashboard' %}" class="text-white text-decoration-none me-3">←</a>
+    {% else %}
+        <a href="{% url 'home' %}" class="text-white text-decoration-none me-3">←</a>
+    {% endif %}
     <h4 class="fw-bold mb-0">My Collections ⭐</h4>
 </div>
 

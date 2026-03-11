@@ -1,0 +1,201 @@
+{% extends 'base/base.html' %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        padding: 0;
+        background: #fff;
+        color: #000;
+    }
+    
+    .top-nav {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        border-bottom: 2px solid #b080f4;
+    }
+    
+    .home-btn {
+        color: #b080f4;
+        text-decoration: none;
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .top-nav .page-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+        letter-spacing: -0.3px;
+    }
+    /* Content Padding */
+    .dashboard-content {
+        padding: 20px;
+    }
+    
+    /* Welcome Card */
+    .welcome-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .admin-title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #b080f4;
+    }
+    
+    .admin-subtitle {
+        color: #999;
+        font-size: 14px;
+    }
+    
+    /* Quick Links */
+    .quick-links {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .link-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 20px;
+        text-decoration: none;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border: 1px solid #333;
+    }
+    
+    .link-card:hover {
+        border-color: #FF9800;
+        background: #222;
+    }
+    
+    .link-icon {
+        font-size: 32px;
+        width: 50px;
+        text-align: center;
+    }
+    
+    .link-content {
+        flex: 1;
+    }
+    
+    .link-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .link-desc {
+        font-size: 12px;
+        color: #999;
+    }
+    
+    .link-arrow {
+        color: #666;
+        font-size: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    
+    <!-- Sticky Top Navigation -->
+    <div class="top-nav">
+        <a href="{% url 'home' %}" class="home-btn">←</a>
+        <div class="page-title">Admin Dashboard</div>
+    </div>
+    
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <div class="admin-title">Welcome, {{ user.username }}</div>
+            <div class="admin-subtitle">Administrator</div>
+        </div>
+        
+        <div class="quick-links">
+            
+            <!-- Django Admin -->
+            <a href="/admin/" class="link-card">
+                <div class="link-icon">⚙️</div>
+                <div class="link-content">
+                    <div class="link-title">Django Admin Panel</div>
+                    <div class="link-desc">Manage all database records</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+            
+            <!-- All Users -->
+            <a href="/admin/properties/user/" class="link-card">
+                <div class="link-icon">👥</div>
+                <div class="link-content">
+                    <div class="link-title">Manage Users</div>
+                    <div class="link-desc">View and edit all users</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+            
+            <!-- All Properties -->
+            <a href="/admin/properties/property/" class="link-card">
+                <div class="link-icon">🏠</div>
+                <div class="link-content">
+                    <div class="link-title">Manage Properties</div>
+                    <div class="link-desc">View and edit all properties</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+            
+            <!-- All Reviews -->
+            <a href="/admin/properties/review/" class="link-card">
+                <div class="link-icon">💬</div>
+                <div class="link-content">
+                    <div class="link-title">Manage Reviews</div>
+                    <div class="link-desc">Moderate user reviews</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+            
+            <!-- User Profiles -->
+            <a href="/admin/properties/userprofile/" class="link-card">
+                <div class="link-icon">📝</div>
+                <div class="link-content">
+                    <div class="link-title">User Profiles</div>
+                    <div class="link-desc">Manage user profiles</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+            
+            <!-- Agency Profiles -->
+            <a href="/admin/properties/agencyprofile/" class="link-card">
+                <div class="link-icon">🏢</div>
+                <div class="link-content">
+                    <div class="link-title">Agency Profiles</div>
+                    <div class="link-desc">Manage agency profiles</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+            
+        </div>
+        
+    </div>
+    
+</div>
+{% endblock %}

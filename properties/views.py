@@ -3,8 +3,9 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Property, User, Like, Collection, Review
-from .forms import PropertyForm, ReviewForm
+from .models import Property, User, Like, Collection, Review, UserProfile, AgencyProfile
+from .forms import PropertyForm, ReviewForm, UserProfileForm, AgencyProfileForm
+from django.conf import settings
 
 
 def home(request):
@@ -69,6 +70,7 @@ def property_detail(request, pk):
         "review_count": review_count,
         "avg_rating": avg_rating,
         "existing_review": existing_review,
+        "google_maps_key": settings.GOOGLE_MAPS_API_KEY,
     })
 
 
@@ -199,13 +201,61 @@ def dashboard_redirect(request):
 
 @login_required
 def user_dashboard(request):
-    return render(request, "dashboards/user_dashboard.html")
+
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    my_collections_count = Collection.objects.filter(user=request.user).count()
+    my_likes_count = Like.objects.filter(user=request.user).count()
+    my_reviews_count = Review.objects.filter(user=request.user).count()
+    
+    recent_collections = Property.objects.filter(
+        collected_by__user=request.user
+    ).order_by('-collected_by__created_at')[:3]
+    
+    recent_likes = Property.objects.filter(
+        likes__user=request.user
+    ).order_by('-likes__created_at')[:3]
+    
+    recent_reviews = Review.objects.filter(
+        user=request.user
+    ).select_related('property').order_by('-created_at')[:3]
+    
+    context = {
+        'profile': profile,
+        'my_collections_count': my_collections_count,
+        'my_likes_count': my_likes_count,
+        'my_reviews_count': my_reviews_count,
+        'recent_collections': recent_collections,
+        'recent_likes': recent_likes,
+        'recent_reviews': recent_reviews,
+    }
+    
+    return render(request, "dashboards/user_dashboard.html", context)
 
 
 @login_required
 def agency_dashboard(request):
-    return render(request, "dashboards/agency_dashboard.html")
+    if request.user.role != 'agency':
+        messages.warning(request, "You don't have permission to access this page")
+        return redirect('user_dashboard')
 
+    profile, created = AgencyProfile.objects.get_or_create(user=request.user)
+    
+    properties = Property.objects.filter(owner=request.user).order_by('-created_at')
+    
+    total_properties = properties.count()
+    avg_rating = profile.get_avg_rating()
+    
+    recent_properties = properties[:5]
+    
+    context = {
+        'profile': profile,
+        'properties': recent_properties,
+        'total_properties': total_properties,
+        'avg_rating': avg_rating,
+    }
+    
+    return render(request, "dashboards/agency_dashboard.html", context)
 
 @login_required
 def admin_dashboard(request):
@@ -220,3 +270,43 @@ def user_info(request):
 @login_required
 def agency_info(request):
     return render(request, "info/agency_info.html")
+
+@login_required
+def edit_user_profile(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('user_dashboard')
+    else:
+        form = UserProfileForm(instance=profile)
+    
+    return render(request, "info/edit_user_profile.html", {
+        'form': form,
+        'profile': profile
+    })
+
+
+@login_required
+def edit_agency_profile(request):
+    if request.user.role != 'agency':
+        messages.warning(request, "You don't have permission to access this page")
+        return redirect('user_dashboard')
+    profile, created = AgencyProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        form = AgencyProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('agency_dashboard')
+    else:
+        form = AgencyProfileForm(instance=profile)
+    
+    return render(request, "info/edit_agency_profile.html", {
+        'form': form,
+        'profile': profile
+    })
