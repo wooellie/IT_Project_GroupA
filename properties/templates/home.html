@@ -3,7 +3,15 @@
 {% block extra_css %}
 <style>
 /* 针对 Home 页面的特殊背景颜色 */
-.iphone-screen { background-color: #111; color: white; }
+.iphone-screen { 
+    background-color: #111; 
+    color: white;
+    position: relative;
+    overflow: hidden;
+    min-height: 100%;
+}
+
+
 /* 确保内容不被底部栏遮挡 */
 .content-area { padding-bottom: 80px; } 
 
@@ -13,6 +21,8 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+
 
 .avatar-circle {
     width: 35px;
@@ -28,10 +38,7 @@
 .iphone-screen { background-color: #111; color: white; }
 /* 确保内容不被底部栏遮挡 */
 .content-area { padding-bottom: 80px; } 
-.iphone-screen {
-    background-color: #111;
-    color: white;
-}
+
 
 .content-area {
     padding-bottom: 80px;
@@ -65,15 +72,18 @@
 }
 
 .container-bottom-bar {
-    position: fixed;
+    position: sticky;
     bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+    z-index: 10;
     background-color: #6c757d;
-    max-width: 430px;
-    margin: 0 auto;
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid #222;
+    margin-bottom: 0;
+    padding-bottom: 5px;
 }
+
+
 </style>
 {% endblock %}
 
@@ -232,7 +242,7 @@
     </div>
 </div>
 
-<div class="container-bottom-bar bg-secondary py-2 border-top border-dark">
+<div class="container-bottom-bar">
     <div class="container d-flex justify-content-center gap-4 px-3">
 
         <a href="{% if user.is_authenticated and user.role == 'agency' %}{% url 'post_property' %}{% else %}{% url 'login' %}?next={% url 'post_property' %}{% endif %}"
