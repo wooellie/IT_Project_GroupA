@@ -21,10 +21,12 @@ def home(request):
     if query:
         if search_by == 'postcode':
             properties = properties.filter(zip_code__icontains=query)
-        elif search_by == 'title':
-            properties = properties.filter(title__icontains=query)
+        elif search_by == 'address':
+            properties = properties.filter(address__icontains=query)
         elif search_by == 'agency':
             properties = properties.filter(user__username__icontains=query)
+        elif search_by == 'area':
+            properties = properties.filter(area__icontains=query)
 
     # Rating annotation for rating filter
     properties = properties.annotate(avg_review_rating=Avg('reviews__rating'))
@@ -292,8 +294,25 @@ def user_info(request):
 
 
 @login_required
-def agency_info(request):
-    return render(request, "info/agency_info.html")
+def agency_info(request, user_id):
+    agency_user = get_object_or_404(User, pk=user_id, role='agency')
+    agency_profile, created = AgencyProfile.objects.get_or_create(user=agency_user)
+    properties = Property.objects.filter(user=agency_user).order_by('-created_at')
+    
+    total_properties = properties.count()
+    avg_rating = agency_profile.get_avg_rating()
+    
+    recent_properties = properties[:5]
+    
+    context = {
+        'agency_user': agency_user,
+        'agency_profile': agency_profile,
+        'properties': properties,
+        'total_properties': total_properties,
+        'avg_rating': avg_rating,
+    }
+    
+    return render(request, "info/agency_info.html", context)
 
 @login_required
 def edit_user_profile(request):

@@ -53,4 +53,7 @@ urlpatterns = [
     
     # 切换收藏状态的 URL
     path('property/<int:pk>/collect/', views.toggle_collection, name='toggle_collection'),
+    
+    # Agency profile URL
+    path('agency/<int:user_id>/', views.agency_info, name = 'agency_info')
 ]
