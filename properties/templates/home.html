@@ -2,18 +2,17 @@
 
 {% block extra_css %}
 <style>
-/* 针对 Home 页面的特殊背景颜色 */
 .iphone-screen { 
-    background-color: #111; 
-    color: white;
+    background-color: #fff;
+    color: #000;
     position: relative;
     overflow: hidden;
     min-height: 100%;
 }
 
-
-/* 确保内容不被底部栏遮挡 */
-.content-area { padding-bottom: 80px; } 
+.content-area { 
+    padding-bottom: 80px; 
+} 
 
 .user-avatar {
     width: 35px;
@@ -21,8 +20,6 @@
     border-radius: 50%;
     object-fit: cover;
 }
-
-
 
 .avatar-circle {
     width: 35px;
@@ -34,41 +31,96 @@
 }
 
 
-/* 针对 Home 页面的特殊背景颜色 */
-.iphone-screen { background-color: #111; color: white; }
-/* 确保内容不被底部栏遮挡 */
-.content-area { padding-bottom: 80px; } 
-
-
-.content-area {
-    padding-bottom: 80px;
-}
-
 .search-title {
-    color: #00d26a;
+    color: #b080f4;
     font-weight: 700;
-    font-size: 1.2rem;
-    margin-bottom: 12px;
+    font-size: 1rem;
+    margin-bottom: 16px;
     text-align: center;
 }
 
 .search-box {
-    background-color: #000;
+    background-color: #f5f5f7;
+    border: 1px solid #e0e0e0;
     border-radius: 16px;
-    padding: 14px;
+    padding: 20px;
     margin-bottom: 18px;
 }
 
 .search-label {
-    color: #d8ccf0;
-    font-size: 0.8rem;
-    margin-bottom: 4px;
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
     display: block;
+    font-weight: 500;
 }
 
 .form-control-sm,
 .form-select-sm {
     border-radius: 12px;
+}
+
+
+.btn-secondary {
+    background: linear-gradient(135deg, #b080f4, #9060d4);
+    border: none;
+    color: white;
+    font-weight: 600;
+}
+
+.btn-outline-secondary {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #666;
+}
+
+.btn-outline-secondary:hover {
+    background: #f5f5f7;
+    border-color: #b080f4;
+    color: #b080f4;
+}
+
+
+.card {
+    background: #fff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(176, 128, 244, 0.15);
+    border-color: #b080f4 !important;
+}
+
+.card a {
+    color: #000 !important;
+}
+
+.card .text-light {
+    color: #666 !important;
+}
+
+.card .text-secondary {
+    color: #999 !important;
+}
+
+.card .text-warning {
+    color: #ff9500 !important;
+}
+
+.card .text-info {
+    color: #b080f4 !important;
+}
+
+.card-body {
+    background: #fff !important;
+}
+
+.card h6 {
+    color: #000 !important;
 }
 
 .container-bottom-bar {
@@ -94,12 +146,12 @@
     <!-- 导航栏 -->
 
 
-    <nav class="navbar navbar-dark bg-dark px-4">
+    <nav class="navbar px-4" style="background:#fff; border-bottom:1px solid #e0e0e0;">
         <div class="d-flex align-items-center gap-3">
 
 
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard_redirect' %}" class="text-decoration-none d-flex align-items-center gap-2">
+                <a href="{% url 'dashboard_redirect' %}" class="text-decoration-none d-flex align-items-center gap-3">
                     {% if user.role == 'user' %}
                         {% if user.profile.avatar %}
                             <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="user-avatar">
@@ -117,23 +169,23 @@
                     {% else %}
                         <div class="avatar-circle bg-secondary"></div>
                     {% endif %}
-                    <span class="text-white">{{ user.username }}</span>
+                    <span style="color:#000; font-weight:600; font-size:1.1rem;">{{ user.username }}</span>
                 </a>
                 
                 <form method="post" action="{% url 'logout' %}" class="ms-2">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                    <button type="submit" class="btn btn-sm" style="border:1px solid #e0e0e0; color:#666; background:#f5f5f7;">Logout</button>
                 </form>
             {% else %}
                 <div class="avatar-circle bg-secondary"></div>
-                <span class="text-white">Please log in</span>
+                <span style="color:#000; font-weight:600;">Please log in</span>
             {% endif %}
         </div>
 
         {% if not user.is_authenticated %}
         <div class="d-flex gap-2">
-            <a href="{% url 'register' %}" class="btn btn-outline-light btn-sm">New Account</a>
-            <a href="{% url 'login' %}" class="btn btn-light btn-sm">Login</a>
+            <a href="{% url 'register' %}" class="btn btn-sm" style="border:1px solid #e0e0e0; color:#666; background:#f5f5f7;">New Account</a>
+            <a href="{% url 'login' %}" class="btn btn-light btn-sm" style="border:1px solid #e0e0e0; color:#666; background:#f5f5f7;">Login</a>
         </div>
         {% endif %}
     </nav>

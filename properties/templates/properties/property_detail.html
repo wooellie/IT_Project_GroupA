@@ -13,13 +13,31 @@ display:flex;
 flex-direction:column;
 }
 
-.back-nav{
-position:sticky;
-top:0;
-z-index:1000;
-padding:15px 20px;
-background:#000;
-border-bottom:1px solid #222;
+.back-nav {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    border-bottom: 2px solid #b080f4;
+}
+
+.back-btn {
+    color: #b080f4;
+    text-decoration: none;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    letter-spacing: -0.3px;
 }
 
 .detail-img{
@@ -207,10 +225,8 @@ margin-top: 5px;
 {% block content %}
 
 <div class="back-nav">
-<a href="{% url 'home' %}" class="text-white text-decoration-none fw-bold d-flex align-items-center">
-<span style="font-size:1.5rem;margin-right:8px;">‹</span>
-<span>Back to List</span>
-</a>
+    <a href="{% url 'home' %}" class="back-btn">←</a>
+    <div class="page-title">Back to List</div>
 </div>
 
 

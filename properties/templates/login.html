@@ -3,13 +3,12 @@
 {% block title %}Login - UniNest{% endblock %}
 
 {% block extra_css %}
-/* 针对登录页面的背景和布局调整 */
+<style>
 .iphone-screen { 
-    background-color: #f4f4f7; /* 稍微浅一点的灰色，更有质感 */
+    background-color: #f4f4f7;
 }
 
 .login-wrapper {
-    /* 减去灵动岛状态栏的高度(约44px)，实现垂直居中 */
     height: calc(932px - 44px); 
     display: flex;
     align-items: center;
@@ -19,10 +18,10 @@
 
 .login-card {
     width: 100%;
-    max-width: 340px; /* 缩小宽度，让手机屏幕左右有留白 */
+    max-width: 340px;
     background: white;
     padding: 35px 25px;
-    border-radius: 30px; /* 圆角稍微调小一点，适配手机卡片感 */
+    border-radius: 30px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
@@ -31,6 +30,12 @@
     padding: 12px;
     background-color: #f8f9fa;
     border: 1px solid #eee;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #b080f4;
+    box-shadow: 0 0 0 3px rgba(176, 128, 244, 0.1);
 }
 
 .btn-confirm {
@@ -42,7 +47,26 @@
     font-weight: 600;
     border: none;
     margin-top: 10px;
+    cursor: pointer;
 }
+
+.btn-confirm:hover {
+    background-color: #333;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+</style>
 {% endblock %}
 
 {% block content %}
@@ -50,12 +74,26 @@
     <div class="login-card">
         <h3 class="text-center mb-4 fw-bold">Login</h3>
 
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags == 'error' or message.tags == 'danger' %}error-message{% else %}success-message{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="error-message">
+                Invalid username or password. Please try again.
+            </div>
+        {% endif %}
+
         <form method="post">
             {% csrf_token %}
 
             <div class="mb-3">
                 <label class="form-label small text-secondary fw-bold">User name</label>
-                <input class="form-control" name="username" placeholder="Enter username" required>
+                <input class="form-control" name="username" type="text" placeholder="Enter username" value="{{ form.username.value|default:'' }}" required>
             </div>
 
             <div class="mb-4">
@@ -63,7 +101,7 @@
                 <input class="form-control" type="password" name="password" placeholder="Enter password" required>
             </div>
 
-            <button class="btn-confirm mb-4">Confirm</button>
+            <button type="submit" class="btn-confirm mb-4">Confirm</button>
 
             <div class="text-center small">
                 <p class="text-secondary mb-1">Don't have an account?</p>

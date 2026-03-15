@@ -222,10 +222,10 @@
                 {% if profile.agency_name %}{{ profile.agency_name }}{% else %}{{ user.username }}{% endif %}
             </div>
             
-            {% if profile.phone %}<div class="agency-info">📞 {{ profile.phone }}</div>{% endif %}
-            {% if profile.office_address %}<div class="agency-info">📍 {{ profile.office_address }}</div>{% endif %}
+            {% if profile.phone %}<div class="agency-info">{{ profile.phone }}</div>{% endif %}
+            {% if profile.office_address %}<div class="agency-info">{{ profile.office_address }}</div>{% endif %}
             
-            <a href="{% url 'edit_agency_profile' %}" class="edit-btn">✏️ Edit Profile</a>
+            <a href="{% url 'edit_agency_profile' %}" class="edit-btn">Edit Profile</a>
         </div>
         
         <div class="stats-container">
@@ -244,7 +244,7 @@
         </div>
         
         <div class="section-header">
-            <div class="section-title">🏠 My Properties ({{ total_properties }})</div>
+            <div class="section-title">My Properties ({{ total_properties }})</div>
         </div>
         
         {% if properties %}

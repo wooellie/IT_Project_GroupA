@@ -3,47 +3,111 @@
 {% block title %}My Likes - UniNest{% endblock %}
 
 {% block extra_css %}
-/* 保持黑色主题 */
-.iphone-screen { background-color: #111; color: white; }
+<style>
+.iphone-screen { 
+    background-color: #fff; 
+    color: #000; 
+}
 
 .header-nav {
-    padding: 20px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
+    padding: 15px 20px;
+    background: #fff;
+    border-bottom: 2px solid #b080f4;
     position: sticky;
     top: 0;
     z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
+
+.back-btn {
+    color: #b080f4;
+    text-decoration: none;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.page-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    letter-spacing: -0.3px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(176, 128, 244, 0.15);
+    border-color: #b080f4;
+}
+
+.card a {
+    color: #000;
+    text-decoration: none;
+}
+
+.text-warning {
+    color: #ff9500;
+}
+
+.text-secondary {
+    color: #999;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    opacity: 0.3;
+}
+
+.btn-explore {
+    background: linear-gradient(135deg, #b080f4, #9060d4);
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<!-- 1. 顶部导航 -->
-<div class="header-nav d-flex align-items-center">
+<div class="header-nav">
     {% if request.GET.from == 'dashboard' %}
-        <a href="{% url 'user_dashboard' %}" class="text-white text-decoration-none me-3">←</a>
+        <a href="{% url 'user_dashboard' %}" class="back-btn">←</a>
     {% else %}
-        <a href="{% url 'home' %}" class="text-white text-decoration-none me-3">←</a>
+        <a href="{% url 'home' %}" class="back-btn">←</a>
     {% endif %}
-    <h4 class="fw-bold mb-0">My Likes ❤️</h4>
+    <div class="page-title">My Likes</div>
 </div>
 
-<div class="container mt-4 mb-5">
+<div class="container mt-4 mb-5 px-3">
     <div class="row">
         {% for p in properties %}
         <div class="col-6 mb-3">
-            <div class="card bg-dark text-white border-secondary h-100 shadow-sm">
-                <!-- 点击跳转详情页 -->
-                <a href="{% url 'property_detail' p.id %}" class="text-white text-decoration-none">
-                    
+            <div class="card h-100">
+                <a href="{% url 'property_detail' p.id %}">
                     {% if p.image %}
                     <img src="{{ p.image.url }}" class="card-img-top" style="height:120px; object-fit:cover;">
                     {% else %}
-                    <div style="height:120px; background:#444;" class="d-flex align-items-center justify-content-center small text-muted">No Image</div>
+                    <div style="height:120px; background:#f5f5f7;" class="d-flex align-items-center justify-content-center small text-muted">No Image</div>
                     {% endif %}
 
                     <div class="card-body p-2 text-center">
-                        <h6 style="font-size: 0.85rem;" class="mb-1 text-truncate">{{ p.title }}</h6>
-                        <!-- 显示价格换算 -->
+                        <h6 style="font-size: 0.85rem; color:#000;" class="mb-1 text-truncate">{{ p.title }}</h6>
                         <div class="text-warning small" style="font-size: 0.75rem;">
                             £{{ p.price }} <span class="text-secondary">pw</span>
                         </div>
@@ -52,16 +116,14 @@
             </div>
         </div>
         {% empty %}
-        <!-- 空状态提示 -->
-        <div class="col-12 text-center mt-5">
-            <div style="font-size: 3rem; opacity: 0.3;">❤️</div>
-            <p class="text-secondary mt-3">You haven't liked any properties yet.</p>
-            <a href="{% url 'home' %}" class="btn btn-outline-light btn-sm mt-2 rounded-pill px-4">Go Explore</a>
+        <div class="col-12 empty-state">
+            <div class="empty-icon">❤️</div>
+            <p style="color:#999; margin-top:20px;">You haven't liked any properties yet.</p>
+            <a href="{% url 'home' %}" class="btn-explore">Go Explore</a>
         </div>
         {% endfor %}
     </div>
 </div>
 
-<!-- 底部留白，防止内容被挡住 -->
 <div style="height: 60px;"></div>
 {% endblock %}

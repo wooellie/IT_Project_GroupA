@@ -259,12 +259,12 @@
                 <div class="user-info">{{ profile.bio }}</div>
             {% endif %}
             
-            <a href="{% url 'edit_user_profile' %}" class="edit-btn">✏️ Edit Profile</a>
+            <a href="{% url 'edit_user_profile' %}" class="edit-btn">Edit Profile</a>
         </div>
         
         <!-- My Collections -->
         <div class="section-header">
-            <div class="section-title">📁 My Collections ({{ my_collections_count }})</div>
+            <div class="section-title">My Collections ({{ my_collections_count }})</div>
             <a href="{% url 'my_collection' %}?from=dashboard" class="view-all">View All →</a>
         </div>
         
@@ -292,7 +292,7 @@
         
         <!-- My Likes -->
         <div class="section-header">
-            <div class="section-title">❤️ My Likes ({{ my_likes_count }})</div>
+            <div class="section-title">My Likes ({{ my_likes_count }})</div>
             <a href="{% url 'my_likes' %}?from=dashboard" class="view-all">View All →</a>
         </div>
         
@@ -320,7 +320,7 @@
         
         <!-- My Reviews -->
         <div class="section-header">
-            <div class="section-title">💬 My Reviews ({{ my_reviews_count }})</div>
+            <div class="section-title">My Reviews ({{ my_reviews_count }})</div>
         </div>
         
         {% if recent_reviews %}
