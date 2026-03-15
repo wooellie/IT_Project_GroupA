@@ -431,11 +431,11 @@ Collect
 </form>
 
 
-<button class="btn flex-grow-1 rounded-pill py-2 fw-bold small"
+<button type="button"
+onclick="window.location.href='{% url 'agency_info' property.user.id %}'"
+class="btn flex-grow-1 rounded-pill py-2 fw-bold small"
 style="background:#b080f4;color:white;border:none;">
-
 Contact Agency
-
 </button>
 
 </div>

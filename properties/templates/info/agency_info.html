@@ -1,0 +1,272 @@
+{% extends 'base/base.html' %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        padding: 0;
+        background: #fff;
+        color: #000;
+    }
+    
+    .top-nav {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        border-bottom: 2px solid #b080f4;
+    }
+    
+    .home-btn {
+        color: #b080f4;
+        text-decoration: none;
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .top-nav .page-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+        letter-spacing: -0.3px;
+    }
+    
+    .dashboard-content {
+        padding: 20px;
+    }
+    
+    .profile-card {
+        background: #f5f5f7;
+        border-radius: 16px;
+        padding: 30px 20px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: #b080f4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: white;
+        margin: 0 auto 15px;
+    }
+    
+    .avatar-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 15px;
+        display: block;
+    }
+    
+    .agency-name {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #000;
+    }
+    
+    .agency-info {
+        color: #666;
+        font-size: 14px;
+        margin: 5px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    
+    .edit-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 24px;
+        background: linear-gradient(135deg, #b080f4, #9060d4);
+        color: white;
+        text-decoration: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #b080f4;
+        margin-bottom: 5px;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #666;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 25px 0 15px;
+    }
+    
+    .section-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 15px;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 3px;
+    }
+    
+    .property-card {
+        min-width: 150px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    
+    .property-image {
+        width: 150px;
+        height: 100px;
+        object-fit: cover;
+        background: #f5f5f7;
+    }
+    
+    .property-info {
+        padding: 10px;
+    }
+    
+    .property-title {
+        font-size: 14px;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #000;
+        font-weight: 500;
+    }
+    
+    .property-price {
+        color: #ff9500;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        color: #999;
+        padding: 30px;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="top-nav">
+        <a href="{% url 'home' %}" class="home-btn">←</a>
+        <div class="page-title">Agency Profile</div>
+    </div>
+    
+    <div class="dashboard-content">
+        <div class="profile-card">
+            {% if agency_profile.avatar %}
+                <img src="{{ agency_profile.avatar.url }}" alt="Avatar" class="avatar-image">
+            {% else %}
+                <div class="avatar-circle">🏢</div>
+            {% endif %}
+            
+            <div class="agency-name">
+                {% if agency_profile.agency_name %}{{ agency_profile.agency_name }}{% else %}{{ agency_user.username }}{% endif %}
+            </div>
+            
+            {% if agency_profile.phone %}<div class="agency-info">📞 {{ agency_profile.phone }}</div>{% endif %}
+            {% if agency_profile.office_address %}<div class="agency-info">📍 {{ agency_profile.office_address }}</div>{% endif %}
+            
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_properties }}</div>
+                <div class="stat-label">Properties</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ avg_rating|floatformat:1 }}</div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Views</div>
+            </div>
+        </div>
+        
+        <div class="section-header">
+            <div class="section-title">🏠 Agency Properties ({{ total_properties }})</div>
+        </div>
+        
+        {% if properties %}
+            <div class="scroll-container">
+                {% for property in properties %}
+                <a href="{% url 'property_detail' property.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="property-card">
+                        {% if property.image %}
+                            <img src="{{ property.image.url }}" alt="{{ property.title }}" class="property-image">
+                        {% else %}
+                            <div class="property-image"></div>
+                        {% endif %}
+                        <div class="property-info">
+                            <div class="property-title">{{ property.title }}</div>
+                            <div class="property-price">£{{ property.price }} pw</div>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">No properties yet</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
