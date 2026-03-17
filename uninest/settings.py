@@ -28,10 +28,25 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = 'django-insecure-=ao*nt*44o*l&ht+1za8iux$$*^y9as@5cz-x%8m8+(7^@+ydo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['18.171.169.58', 'localhost', '127.0.0.1']
 
+#========以下是为了部署到服务器新增的内容========#
+# 2. 信任该 IP 的提交请求（防止登录时报 CSRF 错误）
+CSRF_TRUSTED_ORIGINS = [
+    'http://18.171.169.58',
+]
+
+# 3. 静态文件目录（必须和脚本一致）
+STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/uninest/static' # 假设项目名是 uninest
+
+# 4. 媒体文件目录（必须和脚本一致）
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/var/www/uninest/media'
 
 # Application definition
 
@@ -120,7 +135,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # 在文件末尾添加或修改：
 AUTH_USER_MODEL = 'properties.User'  # 关键：指向自定义模型
@@ -128,8 +143,8 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = "/"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 在控制台查看邮件内容，方便测试重置链接
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
