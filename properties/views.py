@@ -10,6 +10,9 @@ from django.conf import settings
 
 from django.db.models import Avg
 
+def landing_page(request):
+    return render(request, "landing.html")
+
 def home(request):
     query = request.GET.get('q', '').strip()
     search_by = request.GET.get('search_by', 'postcode')
@@ -17,7 +20,6 @@ def home(request):
 
     properties = Property.objects.all()
 
-    # Search logic
     if query:
         if search_by == 'postcode':
             properties = properties.filter(zip_code__icontains=query)
@@ -28,10 +30,8 @@ def home(request):
         elif search_by == 'area':
             properties = properties.filter(area__icontains=query)
 
-    # Rating annotation for rating filter
     properties = properties.annotate(avg_review_rating=Avg('reviews__rating'))
 
-    # Filter logic
     if filter_by == 'price_low':
         properties = properties.order_by('price')
     elif filter_by == 'price_high':

@@ -2,49 +2,21 @@
 
 {% block extra_css %}
 <style>
-    .edit-container {
-        padding: 0;
-        background: #fff;
-        color: #000;
-    }
-    
-    .page-header {
-        position: sticky;
-        top: 0;
-        background: #fff;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 15px 20px;
-        border-bottom: 2px solid #b080f4;
-    }
-    
-    .back-btn {
-        color: #b080f4;
-        text-decoration: none;
-        font-size: 26px;
-        font-weight: bold;
-        line-height: 1;
-    }
-    
-    .page-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #000;
-        letter-spacing: -0.3px;
-    }
-    
-    .edit-content {
-        padding: 20px;
+    .form-card {
+        background: white;
+        padding: 32px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid #e0e0e0;
     }
     
     .avatar-preview-section {
         text-align: center;
         margin-bottom: 25px;
         padding: 30px 20px;
-        background: #f5f5f7;
-        border-radius: 16px;
+        background: var(--bg-light);
+        border-radius: var(--border-radius);
+        border: 1px dashed #ccc;
     }
     
     .current-avatar {
@@ -54,81 +26,37 @@
         object-fit: cover;
         margin: 0 auto 15px;
         display: block;
+        box-shadow: var(--shadow-sm);
     }
     
     .avatar-circle {
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: #b080f4;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 40px;
         color: white;
         margin: 0 auto 15px;
-    }
-    
-    .avatar-label {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 15px;
-        font-weight: 500;
-    }
-    
-    #avatar-preview {
-        display: none;
-        margin-top: 15px;
-    }
-    
-    #avatar-preview img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-    
-    #avatar-preview p {
-        color: #b080f4;
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-label {
-        display: block;
-        font-size: 13px;
-        color: #999;
-        margin-bottom: 8px;
-        font-weight: 500;
+        box-shadow: var(--shadow-sm);
     }
     
     .form-control {
-        width: 100%;
-        padding: 14px;
-        background: #f5f5f7;
+        border-radius: 8px;
+        background-color: #f8f9fa;
         border: 1px solid #e0e0e0;
-        border-radius: 12px;
-        color: #000;
-        font-size: 15px;
-        box-sizing: border-box;
-        font-weight: 500;
+        padding: 12px;
+        transition: var(--transition);
     }
     
     .form-control:focus {
-        outline: none;
-        border-color: #b080f4;
-        background: #fff;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(176, 128, 244, 0.25);
+        background-color: white;
     }
-    
-    textarea.form-control {
-        resize: vertical;
-        min-height: 80px;
-    }
-    
+
     .file-input-wrapper {
         position: relative;
         overflow: hidden;
@@ -144,141 +72,115 @@
     .file-input-label {
         display: block;
         padding: 14px;
-        background: #f5f5f7;
-        border: 1px solid #e0e0e0;
-        border-radius: 12px;
+        background: #f8f9fa;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
         color: #666;
         cursor: pointer;
         text-align: center;
         font-weight: 500;
-        font-size: 15px;
+        transition: var(--transition);
     }
     
     .file-input-label:hover {
-        border-color: #b080f4;
-        background: #fff;
-        color: #b080f4;
+        border-color: var(--primary-color);
+        background: white;
+        color: var(--primary-color);
+    }
+
+    #avatar-preview {
+        display: none;
+        margin-top: 15px;
     }
     
-    .button-group {
-        display: flex;
-        gap: 12px;
-        margin-top: 30px;
-    }
-    
-    .btn {
-        flex: 1;
-        padding: 14px;
-        border: none;
-        border-radius: 20px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        text-align: center;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #b080f4, #9060d4);
-        color: white;
-    }
-    
-    .btn-secondary {
-        background: #e0e0e0;
-        color: #666;
-    }
-    
-    .messages {
-        margin-bottom: 20px;
-    }
-    
-    .alert {
-        padding: 14px;
-        border-radius: 12px;
-        margin-bottom: 10px;
-        font-size: 14px;
-    }
-    
-    .alert-success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-    
-    .alert-error {
-        background: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
+    #avatar-preview img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: var(--shadow-sm);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="edit-container">
-    <div class="page-header">
-        <a href="{% url 'agency_dashboard' %}" class="back-btn">←</a>
-        <div class="page-title">Edit Agency Profile</div>
-    </div>
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none" style="color: var(--primary-color);">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'agency_dashboard' %}" class="text-decoration-none" style="color: var(--primary-color);">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Agency Profile</li>
+        </ol>
+    </nav>
     
-    <div class="edit-content">
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
+    <div class="row justify-content-center">
+        <div class="col-lg-8 animate-fade-in-up">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold"><i class="bi bi-building-gear text-primary"></i> Edit Agency Profile</h2>
+                <p class="text-muted">Update your agency information and details</p>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <div class="avatar-preview-section">
-            <div class="avatar-label">Current Logo/Avatar</div>
-            {% if profile.avatar %}
-                <img src="{{ profile.avatar.url }}" alt="Avatar" class="current-avatar">
-            {% else %}
-                <div class="avatar-circle">🏢</div>
-            {% endif %}
             
-            <div id="avatar-preview">
-                <p>New Logo Preview:</p>
-                <img src="" alt="Preview">
-            </div>
-        </div>
-        
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label class="form-label">Upload New Logo/Avatar</label>
-                <div class="file-input-wrapper">
-                    {{ form.avatar }}
-                    <label for="id_avatar" class="file-input-label">
-                        📷 Choose Image
-                    </label>
+            <div class="form-card">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="avatar-preview-section">
+                    <div class="avatar-label mb-3 fw-bold text-muted">Current Logo/Avatar</div>
+                    {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" alt="Avatar" class="current-avatar">
+                    {% else %}
+                        <div class="avatar-circle">
+                            <i class="bi bi-building"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div id="avatar-preview">
+                        <p class="mt-3 mb-2" style="color: var(--primary-color); font-weight: 500;"><i class="bi bi-eye"></i> New Logo Preview</p>
+                        <img src="" alt="Preview">
+                    </div>
                 </div>
+                
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Upload New Logo/Avatar</label>
+                        <div class="file-input-wrapper">
+                            {{ form.avatar }}
+                            <label for="id_avatar" class="file-input-label">
+                                <i class="bi bi-camera me-2"></i> Choose Image
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Agency Name</label>
+                        {{ form.agency_name }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Contact Phone</label>
+                        {{ form.phone }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Office Address</label>
+                        {{ form.office_address }}
+                    </div>
+                    
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="{% url 'agency_dashboard' %}" class="btn btn-outline-secondary flex-grow-1 py-2" style="border-radius: 12px; font-weight: 500;">Cancel</a>
+                        <button type="submit" class="btn btn-primary-custom flex-grow-1 py-2"><i class="bi bi-check2-circle"></i> Save Changes</button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="form-group">
-                <label class="form-label">Agency Name</label>
-                {{ form.agency_name }}
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Contact Phone</label>
-                {{ form.phone }}
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Office Address</label>
-                {{ form.office_address }}
-            </div>
-            
-            <div class="button-group">
-                <a href="{% url 'agency_dashboard' %}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -299,6 +201,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    const inputs = document.querySelectorAll('input[type="text"], input[type="tel"], textarea');
+    inputs.forEach(input => {
+        input.classList.add('form-control');
+    });
 });
 </script>
 {% endblock %}

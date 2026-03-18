@@ -3,105 +3,103 @@
 {% block title %}New Account - UniNest{% endblock %}
 
 {% block extra_css %}
-/* 保持与登录页一致的背景色 */
-.iphone-screen { 
-    background-color: #f4f4f7; 
-}
-
+<style>
 .register-wrapper {
-    /* 适配 iPhone 屏幕高度，实现垂直居中 */
-    height: calc(932px - 44px); 
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 40px 20px;
+    min-height: 80vh;
 }
 
 .register-card {
     width: 100%;
-    max-width: 340px; 
+    max-width: 450px; 
     background: white;
-    padding: 30px 25px;
-    border-radius: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    padding: 40px 30px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid #e0e0e0;
 }
 
 .form-control {
-    border-radius: 12px;
-    padding: 10px 12px;
-    background-color: #f8f9fa;
-    border: 1px solid #eee;
-    font-size: 0.9rem;
-}
-
-.btn-confirm {
-    background-color: #000;
-    color: white;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 12px;
-    width: 100%;
-    font-weight: 600;
-    border: none;
-    margin-top: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    transition: var(--transition);
 }
 
-/* 角色标签样式 */
-.role-badge {
-    font-size: 0.75rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-    background: #e9ecef;
-    color: #495057;
-    display: inline-block;
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(176, 128, 244, 0.25);
+    background-color: white;
 }
 
-/* 勾选框样式定制 */
-.form-check-input:checked { background-color: #000; border-color: #000; }
+.form-check-input:checked { 
+    background-color: var(--primary-color); 
+    border-color: var(--primary-color); 
+}
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="register-wrapper">
-    <div class="register-card">
-        <h3 class="fw-bold text-center mb-4">New Account</h3>
+    <div class="register-card animate-fade-in-up">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold"><i class="bi bi-person-plus text-primary"></i> Create Account</h2>
+            <p class="text-muted">Join UniNest to find or list properties</p>
+        </div>
 
         <form method="post">
             {% csrf_token %}
             
             <div class="mb-3">
-                <label class="form-label small text-secondary fw-bold">User / Agency Name</label>
-                <!-- value="{{ typed_username }}" 用于报错返回时保留已输入的用户名 -->
-                <input class="form-control" name="username" placeholder="Pick a name" value="{{ typed_username|default:'' }}" required>
+                <label class="form-label small fw-bold text-dark">User / Agency Name</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
+                    <input class="form-control border-start-0" name="username" placeholder="Pick a username" value="{{ typed_username|default:'' }}" required>
+                </div>
             </div>
 
-            <!-- 新增：邮箱输入框 -->
             <div class="mb-3">
-                <label class="form-label small text-secondary fw-bold">Email Address</label>
-                <input class="form-control" type="email" name="email" placeholder="example@mail.com" value="{{ typed_email|default:'' }}" required>
+                <label class="form-label small fw-bold text-dark">Email Address</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                    <input class="form-control border-start-0" type="email" name="email" placeholder="example@mail.com" value="{{ typed_email|default:'' }}" required>
+                </div>
             </div>
 
-            <!-- 新增：注册为中介的勾选框 -->
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" name="is_agency" id="isAgency" 
+            <div class="form-check mb-3 p-3 bg-light rounded-3 border">
+                <input class="form-check-input ms-1" type="checkbox" name="is_agency" id="isAgency" 
                        {% if role == 'agency' %}checked{% endif %}>
-                <label class="form-check-label small fw-bold" for="isAgency">
-                    Register as agency (Auto-suffix -agency)
+                <label class="form-check-label ms-2 small fw-bold" for="isAgency">
+                    Register as agency <span class="text-muted fw-normal">(Auto-suffix -agency)</span>
                 </label>
             </div>
 
             <div class="mb-3">
-                <label class="form-label small text-secondary fw-bold">Password</label>
-                <input class="form-control" type="password" name="password1" placeholder="Password" required>
+                <label class="form-label small fw-bold text-dark">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                    <input class="form-control border-start-0" type="password" name="password1" placeholder="Create a password" required>
+                </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label small text-secondary fw-bold">Confirm Password</label>
-                <input class="form-control" type="password" name="password2" placeholder="Repeat password" required>
+                <label class="form-label small fw-bold text-dark">Confirm Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock-fill text-muted"></i></span>
+                    <input class="form-control border-start-0" type="password" name="password2" placeholder="Repeat your password" required>
+                </div>
             </div>
 
-            <button type="submit" class="btn-confirm mb-3">Confirm</button>
+            <button type="submit" class="btn btn-primary-custom w-100 py-2 mb-3 fs-5">Sign Up</button>
 
-            <div class="text-center">
-                <a href="{% url 'login' %}" class="text-decoration-none small fw-bold text-dark">Log in</a>
+            <div class="text-center pt-3 border-top">
+                <p class="text-muted mb-0">Already have an account? <a href="{% url 'login' %}" class="text-decoration-none fw-bold" style="color: var(--primary-color);">Log in here</a></p>
             </div>
         </form>
     </div>

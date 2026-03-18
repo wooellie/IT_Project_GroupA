@@ -16,15 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings # 建议这样导入 settings
-from django.conf.urls.static import static # 必须导入 static 函数
+from django.conf import settings # Suggested way to import settings
+from django.conf.urls.static import static # Must import static function
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('properties.urls')),
     
 
 ]
-# 在列表外部添加 static 配置
-if settings.DEBUG: # 建议只在开发模式下开启
+# Add static configuration outside the list
+if settings.DEBUG: # Suggested to only enable in debug mode
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

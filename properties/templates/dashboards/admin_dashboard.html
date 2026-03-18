@@ -2,93 +2,65 @@
 
 {% block extra_css %}
 <style>
-    .dashboard-container {
-        padding: 0;
-        background: #fff;
-        color: #000;
-    }
-    
-    .top-nav {
-        position: sticky;
-        top: 0;
-        background: #fff;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 15px 20px;
-        border-bottom: 2px solid #b080f4;
-    }
-    
-    .home-btn {
-        color: #b080f4;
-        text-decoration: none;
-        font-size: 26px;
-        font-weight: bold;
-        line-height: 1;
-    }
-
-    .top-nav .page-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #000;
-        letter-spacing: -0.3px;
-    }
-    /* Content Padding */
-    .dashboard-content {
-        padding: 20px;
-    }
-    
-    /* Welcome Card */
     .welcome-card {
-        background: #1a1a1a;
-        border-radius: 12px;
-        padding: 30px;
-        margin-bottom: 20px;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+        border-radius: var(--border-radius);
+        padding: 40px 30px;
+        margin-bottom: 30px;
         text-align: center;
+        color: white;
+        box-shadow: var(--shadow-md);
     }
     
     .admin-title {
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
         margin-bottom: 10px;
-        color: #b080f4;
     }
     
     .admin-subtitle {
-        color: #999;
-        font-size: 14px;
+        opacity: 0.9;
+        font-size: 16px;
     }
     
-    /* Quick Links */
     .quick-links {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 15px;
-        margin-top: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
     }
     
     .link-card {
-        background: #1a1a1a;
-        border-radius: 12px;
-        padding: 20px;
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 24px;
         text-decoration: none;
-        color: white;
+        color: var(--text-dark);
         display: flex;
         align-items: center;
-        gap: 15px;
-        border: 1px solid #333;
+        gap: 20px;
+        border: 1px solid #e0e0e0;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
     }
     
     .link-card:hover {
-        border-color: #FF9800;
-        background: #222;
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-color);
+        color: var(--text-dark);
     }
     
     .link-icon {
-        font-size: 32px;
-        width: 50px;
-        text-align: center;
+        font-size: 36px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-light);
+        border-radius: 12px;
+        color: var(--primary-color);
     }
     
     .link-content {
@@ -96,106 +68,104 @@
     }
     
     .link-title {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 4px;
     }
     
     .link-desc {
-        font-size: 12px;
-        color: #999;
+        font-size: 14px;
+        color: #666;
     }
     
     .link-arrow {
-        color: #666;
-        font-size: 20px;
+        color: var(--primary-color);
+        font-size: 24px;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: var(--transition);
+    }
+    
+    .link-card:hover .link-arrow {
+        opacity: 1;
+        transform: translateX(0);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
+<div class="container py-4">
     
-    <!-- Sticky Top Navigation -->
-    <div class="top-nav">
-        <a href="{% url 'home' %}" class="home-btn">←</a>
-        <div class="page-title">Admin Dashboard</div>
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none" style="color: var(--primary-color);">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Admin Dashboard</li>
+        </ol>
+    </nav>
+    
+    <div class="welcome-card animate-fade-in-up">
+        <div class="admin-title">Welcome, {{ user.username }}</div>
+        <div class="admin-subtitle">System Administrator</div>
     </div>
     
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
+    <h4 class="fw-bold mb-4 animate-fade-in-up delay-100"><i class="bi bi-grid-1x2 text-primary"></i> Management Modules</h4>
+    
+    <div class="quick-links animate-fade-in-up delay-200">
         
-        <!-- Welcome Card -->
-        <div class="welcome-card">
-            <div class="admin-title">Welcome, {{ user.username }}</div>
-            <div class="admin-subtitle">Administrator</div>
-        </div>
+        <a href="/admin/" class="link-card">
+            <div class="link-icon"><i class="bi bi-gear"></i></div>
+            <div class="link-content">
+                <div class="link-title">Django Admin</div>
+                <div class="link-desc">Manage all database records</div>
+            </div>
+            <div class="link-arrow"><i class="bi bi-arrow-right"></i></div>
+        </a>
         
-        <div class="quick-links">
-            
-            <!-- Django Admin -->
-            <a href="/admin/" class="link-card">
-                <div class="link-icon">⚙️</div>
-                <div class="link-content">
-                    <div class="link-title">Django Admin Panel</div>
-                    <div class="link-desc">Manage all database records</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
-            
-            <!-- All Users -->
-            <a href="/admin/properties/user/" class="link-card">
-                <div class="link-icon">👥</div>
-                <div class="link-content">
-                    <div class="link-title">Manage Users</div>
-                    <div class="link-desc">View and edit all users</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
-            
-            <!-- All Properties -->
-            <a href="/admin/properties/property/" class="link-card">
-                <div class="link-icon">🏠</div>
-                <div class="link-content">
-                    <div class="link-title">Manage Properties</div>
-                    <div class="link-desc">View and edit all properties</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
-            
-            <!-- All Reviews -->
-            <a href="/admin/properties/review/" class="link-card">
-                <div class="link-icon">💬</div>
-                <div class="link-content">
-                    <div class="link-title">Manage Reviews</div>
-                    <div class="link-desc">Moderate user reviews</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
-            
-            <!-- User Profiles -->
-            <a href="/admin/properties/userprofile/" class="link-card">
-                <div class="link-icon">📝</div>
-                <div class="link-content">
-                    <div class="link-title">User Profiles</div>
-                    <div class="link-desc">Manage user profiles</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
-            
-            <!-- Agency Profiles -->
-            <a href="/admin/properties/agencyprofile/" class="link-card">
-                <div class="link-icon">🏢</div>
-                <div class="link-content">
-                    <div class="link-title">Agency Profiles</div>
-                    <div class="link-desc">Manage agency profiles</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
-            
-        </div>
+        <a href="/admin/properties/user/" class="link-card">
+            <div class="link-icon"><i class="bi bi-people"></i></div>
+            <div class="link-content">
+                <div class="link-title">Manage Users</div>
+                <div class="link-desc">View and edit all users</div>
+            </div>
+            <div class="link-arrow"><i class="bi bi-arrow-right"></i></div>
+        </a>
+        
+        <a href="/admin/properties/property/" class="link-card">
+            <div class="link-icon"><i class="bi bi-houses"></i></div>
+            <div class="link-content">
+                <div class="link-title">Manage Properties</div>
+                <div class="link-desc">View and edit all properties</div>
+            </div>
+            <div class="link-arrow"><i class="bi bi-arrow-right"></i></div>
+        </a>
+        
+        <a href="/admin/properties/review/" class="link-card">
+            <div class="link-icon"><i class="bi bi-chat-square-text"></i></div>
+            <div class="link-content">
+                <div class="link-title">Manage Reviews</div>
+                <div class="link-desc">Moderate user reviews</div>
+            </div>
+            <div class="link-arrow"><i class="bi bi-arrow-right"></i></div>
+        </a>
+        
+        <a href="/admin/properties/userprofile/" class="link-card">
+            <div class="link-icon"><i class="bi bi-person-badge"></i></div>
+            <div class="link-content">
+                <div class="link-title">User Profiles</div>
+                <div class="link-desc">Manage user profiles</div>
+            </div>
+            <div class="link-arrow"><i class="bi bi-arrow-right"></i></div>
+        </a>
+        
+        <a href="/admin/properties/agencyprofile/" class="link-card">
+            <div class="link-icon"><i class="bi bi-building"></i></div>
+            <div class="link-content">
+                <div class="link-title">Agency Profiles</div>
+                <div class="link-desc">Manage agency profiles</div>
+            </div>
+            <div class="link-arrow"><i class="bi bi-arrow-right"></i></div>
+        </a>
         
     </div>
-    
 </div>
 {% endblock %}

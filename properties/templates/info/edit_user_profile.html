@@ -2,49 +2,21 @@
 
 {% block extra_css %}
 <style>
-    .edit-container {
-        padding: 0;
-        background: #fff;
-        color: #000;
-    }
-    
-    .page-header {
-        position: sticky;
-        top: 0;
-        background: #fff;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 15px 20px;
-        border-bottom: 2px solid #b080f4;
-    }
-    
-    .back-btn {
-        color: #b080f4;
-        text-decoration: none;
-        font-size: 26px;
-        font-weight: bold;
-        line-height: 1;
-    }
-    
-    .page-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #000;
-        letter-spacing: -0.3px;
-    }
-    
-    .edit-content {
-        padding: 20px;
+    .form-card {
+        background: white;
+        padding: 32px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid #e0e0e0;
     }
     
     .avatar-preview-section {
         text-align: center;
         margin-bottom: 25px;
         padding: 30px 20px;
-        background: #f5f5f7;
-        border-radius: 16px;
+        background: var(--bg-light);
+        border-radius: var(--border-radius);
+        border: 1px dashed #ccc;
     }
     
     .current-avatar {
@@ -54,13 +26,14 @@
         object-fit: cover;
         margin: 0 auto 15px;
         display: block;
+        box-shadow: var(--shadow-sm);
     }
     
     .avatar-circle {
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: #b080f4;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -68,12 +41,16 @@
         font-weight: bold;
         color: white;
         margin: 0 auto 15px;
+        box-shadow: var(--shadow-sm);
     }
     
     .avatar-label {
         font-size: 14px;
-        color: #666;
+        color: var(--text-muted);
         margin-bottom: 15px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     #avatar-preview {
@@ -86,39 +63,27 @@
         height: 100px;
         border-radius: 50%;
         object-fit: cover;
-    }
-    
-    .form-group {
-        margin-bottom: 20px;
-    }
-    
-    .form-label {
-        display: block;
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 8px;
+        box-shadow: var(--shadow-sm);
     }
     
     .form-control {
-        width: 100%;
-        padding: 12px;
-        background: #f5f5f7;
-        border: 1px solid #e0e0e0;
         border-radius: 8px;
-        color: #000;
-        font-size: 14px;
-        box-sizing: border-box;
+        background-color: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        padding: 12px;
+        transition: var(--transition);
     }
     
     .form-control:focus {
-        outline: none;
-        border-color: #b080f4;
-        background: #fff;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(176, 128, 244, 0.25);
+        background-color: white;
     }
     
-    textarea.form-control {
-        resize: vertical;
-        min-height: 100px;
+    .form-label {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 8px;
     }
     
     .file-input-wrapper {
@@ -136,132 +101,98 @@
     .file-input-label {
         display: block;
         padding: 12px;
-        background: #f5f5f7;
+        background: #f8f9fa;
         border: 1px solid #e0e0e0;
         border-radius: 8px;
-        color: #666;
+        color: var(--text-muted);
         cursor: pointer;
         text-align: center;
+        transition: var(--transition);
+        font-weight: 500;
     }
     
     .file-input-label:hover {
-        border-color: #b080f4;
-        color: #b080f4;
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: white;
     }
     
-    .button-group {
-        display: flex;
-        gap: 10px;
-        margin-top: 30px;
-    }
-    
-    .btn {
-        flex: 1;
-        padding: 14px;
-        border: none;
-        border-radius: 20px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        text-align: center;
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #b080f4, #9060d4);
-        color: white;
-    }
-    
-    .btn-secondary {
-        background: #e0e0e0;
-        color: #666;
-    }
-    
-    .messages {
-        margin-bottom: 20px;
-    }
-    
-    .alert {
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
-    
-    .alert-success {
-        background: #4CAF50;
-        color: white;
-    }
-    
-    .alert-error {
-        background: #f44336;
-        color: white;
-    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="edit-container">
-    <div class="page-header">
-        <a href="{% url 'user_dashboard' %}" class="back-btn">←</a>
-        <div class="page-title">Edit Profile</div>
-    </div>
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none" style="color: var(--primary-color);">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}" class="text-decoration-none" style="color: var(--primary-color);">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+        </ol>
+    </nav>
     
-    <div class="edit-content">
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                {{ message }}
+    <div class="row justify-content-center">
+        <div class="col-lg-8 animate-fade-in-up">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold"><i class="bi bi-person-gear text-primary"></i> Edit Profile</h2>
+                <p class="text-muted">Update your personal information</p>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        <div class="avatar-preview-section">
-            <div class="avatar-label">Current Avatar</div>
-            {% if profile.avatar %}
-                <img src="{{ profile.avatar.url }}" alt="Avatar" class="current-avatar">
-            {% else %}
-                <div class="avatar-circle">
-                    {{ user.username.0|upper }}
+            
+            <div class="form-card">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="avatar-preview-section">
+                    <div class="avatar-label">Current Avatar</div>
+                    {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" alt="Avatar" class="current-avatar">
+                    {% else %}
+                        <div class="avatar-circle">
+                            {{ user.username.0|upper }}
+                        </div>
+                    {% endif %}
+                    
+                    <div id="avatar-preview">
+                        <p class="mt-3 mb-2" style="color: var(--primary-color); font-weight: 500;"><i class="bi bi-eye"></i> New Avatar Preview</p>
+                        <img src="" alt="Preview">
+                    </div>
                 </div>
-            {% endif %}
-            
-            <div id="avatar-preview">
-                <p style="color: #b080f4; margin-bottom: 10px;">New Avatar Preview:</p>
-                <img src="" alt="Preview">
+                
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Upload New Avatar</label>
+                        <div class="file-input-wrapper">
+                            {{ form.avatar }}
+                            <label for="id_avatar" class="file-input-label">
+                                <i class="bi bi-camera me-2"></i> Choose Image
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">University</label>
+                        {{ form.university }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Bio</label>
+                        {{ form.bio }}
+                    </div>
+                    
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="{% url 'user_dashboard' %}" class="btn btn-outline-secondary flex-grow-1 py-2" style="border-radius: 12px; font-weight: 500;">Cancel</a>
+                        <button type="submit" class="btn btn-primary-custom flex-grow-1 py-2"><i class="bi bi-check2-circle"></i> Save Changes</button>
+                    </div>
+                </form>
             </div>
         </div>
-        
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label class="form-label">Upload New Avatar</label>
-                <div class="file-input-wrapper">
-                    {{ form.avatar }}
-                    <label for="id_avatar" class="file-input-label">
-                        📷 Choose Image
-                    </label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">University</label>
-                {{ form.university }}
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Bio</label>
-                {{ form.bio }}
-            </div>
-            
-            <div class="button-group">
-                <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
     </div>
 </div>
 

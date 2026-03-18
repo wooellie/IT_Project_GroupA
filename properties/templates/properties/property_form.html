@@ -3,48 +3,99 @@
 {% block title %}Post New Property{% endblock %}
 
 {% block extra_css %}
-.iphone-screen { background-color: #f4f4f7; }
+<style>
 .form-card {
-    margin: 20px;
     background: white;
-    padding: 25px;
-    border-radius: 30px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    padding: 32px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid #e0e0e0;
 }
-.form-control {
-    border-radius: 12px;
+
+.form-control, .form-select, textarea {
+    border-radius: 8px;
     background-color: #f8f9fa;
-    border: 1px solid #eee;
-    padding: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    transition: var(--transition);
 }
+
+.form-control:focus, .form-select:focus, textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(176, 128, 244, 0.25);
+    background-color: white;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="p-3">
-    <div class="d-flex align-items-center mb-4">
-        <a href="{% url 'home' %}" class="text-dark text-decoration-none me-3">←</a>
-        <h3 class="fw-bold mb-0">Post Property</h3>
-    </div>
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none" style="color: var(--primary-color);">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Post Property</li>
+        </ol>
+    </nav>
 
-    <div class="form-card">
-        <!-- 核心：上传图片必须添加 enctype="multipart/form-data" -->
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% for field in form %}
-            <div class="mb-3">
-                <label class="form-label small fw-bold">{{ field.label }}</label>
-                {{ field }}
-                {% if field.errors %}
-                    <div class="text-danger small">{{ field.errors }}</div>
-                {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-lg-8 animate-fade-in-up">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold"><i class="bi bi-house-add text-primary"></i> Post New Property</h2>
+                <p class="text-muted">Fill in the details below to list your property</p>
             </div>
-            {% endfor %}
 
-            <button type="submit" class="btn btn-dark w-100 py-3 rounded-4 fw-bold mt-3">
-                List Property Now
-            </button>
-        </form>
+            <div class="form-card">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        {% for field in form %}
+                        <div class="col-12 {% if field.name == 'price' or field.name == 'zip_code' %}col-md-6{% endif %} mb-3">
+                            <label class="form-label">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-text text-muted small">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1"><i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary-custom btn-lg w-100">
+                            <i class="bi bi-check2-circle"></i> List Property Now
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const textInputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="url"], input[type="email"], textarea');
+    textInputs.forEach(input => {
+        input.classList.add('form-control');
+    });
+    
+    const selectInputs = document.querySelectorAll('select');
+    selectInputs.forEach(select => {
+        select.classList.add('form-select');
+    });
+
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    fileInputs.forEach(input => {
+        input.classList.add('form-control');
+    });
+});
+</script>
 {% endblock %}

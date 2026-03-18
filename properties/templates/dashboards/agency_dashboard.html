@@ -2,272 +2,266 @@
 
 {% block extra_css %}
 <style>
-    .dashboard-container {
-        padding: 0;
-        background: #fff;
-        color: #000;
-    }
-    
-    .top-nav {
-        position: sticky;
-        top: 0;
-        background: #fff;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 15px 20px;
-        border-bottom: 2px solid #b080f4;
-    }
-    
-    .home-btn {
-        color: #b080f4;
-        text-decoration: none;
-        font-size: 26px;
-        font-weight: bold;
-        line-height: 1;
-    }
-
-    .top-nav .page-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #000;
-        letter-spacing: -0.3px;
-    }
-    
-    .dashboard-content {
-        padding: 20px;
-    }
-    
     .profile-card {
-        background: #f5f5f7;
-        border-radius: 16px;
-        padding: 30px 20px;
-        margin-bottom: 20px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: var(--border-radius);
+        padding: 30px;
+        margin-bottom: 30px;
         text-align: center;
+        box-shadow: var(--shadow-sm);
     }
     
     .avatar-circle {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
-        background: #b080f4;
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 32px;
+        font-size: 40px;
+        font-weight: bold;
         color: white;
-        margin: 0 auto 15px;
+        margin: 0 auto 20px;
+        box-shadow: var(--shadow-md);
     }
     
     .avatar-image {
-        width: 80px;
-        height: 80px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         object-fit: cover;
-        margin: 0 auto 15px;
-        display: block;
+        margin: 0 auto 20px;
+        box-shadow: var(--shadow-md);
     }
     
     .agency-name {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: bold;
-        margin-bottom: 8px;
-        color: #000;
+        margin-bottom: 5px;
+        color: var(--text-dark);
     }
     
     .agency-info {
-        color: #666;
-        font-size: 14px;
-        margin: 5px 0;
+        color: var(--text-dark);
+        font-size: 15px;
+        margin: 8px 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 5px;
-    }
-    
-    .edit-btn {
-        display: inline-block;
-        margin-top: 15px;
-        padding: 10px 24px;
-        background: linear-gradient(135deg, #b080f4, #9060d4);
-        color: white;
-        text-decoration: none;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 600;
+        gap: 8px;
     }
     
     .stats-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-bottom: 20px;
+        gap: 15px;
+        margin-bottom: 30px;
     }
     
     .stat-card {
-        background: #fff;
+        background: white;
         border: 1px solid #e0e0e0;
         border-radius: 12px;
-        padding: 15px;
+        padding: 20px 15px;
         text-align: center;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-color);
     }
     
     .stat-number {
-        font-size: 24px;
+        font-size: 28px;
         font-weight: bold;
-        color: #b080f4;
+        color: var(--primary-color);
         margin-bottom: 5px;
+        line-height: 1;
     }
     
     .stat-label {
-        font-size: 12px;
-        color: #666;
+        font-size: 13px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
     }
     
     .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin: 25px 0 15px;
+        margin: 40px 0 20px;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
     }
     
     .section-title {
-        font-size: 16px;
+        font-size: 20px;
         font-weight: bold;
-        color: #000;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+        color: var(--text-dark);
     }
     
     .scroll-container {
         display: flex;
         overflow-x: auto;
-        gap: 15px;
-        padding-bottom: 10px;
+        gap: 20px;
+        padding-bottom: 15px;
         -webkit-overflow-scrolling: touch;
     }
     
     .scroll-container::-webkit-scrollbar {
-        height: 6px;
+        height: 8px;
     }
     
     .scroll-container::-webkit-scrollbar-thumb {
-        background: #ddd;
-        border-radius: 3px;
+        background: #ccc;
+        border-radius: 4px;
     }
     
     .property-card {
-        min-width: 150px;
-        background: #fff;
+        width: 250px;
+        background: white;
         border: 1px solid #e0e0e0;
         border-radius: 12px;
         overflow: hidden;
         flex-shrink: 0;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .property-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-color);
     }
     
     .property-image {
-        width: 150px;
-        height: 100px;
+        width: 100%;
+        height: 150px;
         object-fit: cover;
-        background: #f5f5f7;
+        background: var(--bg-light);
     }
     
     .property-info {
-        padding: 10px;
+        padding: 15px;
     }
     
     .property-title {
-        font-size: 14px;
-        margin-bottom: 5px;
+        font-size: 16px;
+        margin-bottom: 8px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        color: #000;
-        font-weight: 500;
+        color: var(--text-dark);
+        font-weight: 600;
     }
     
     .property-price {
-        color: #ff9500;
+        color: var(--primary-color);
         font-weight: bold;
-        font-size: 14px;
+        font-size: 15px;
     }
     
     .empty-state {
         text-align: center;
-        color: #999;
-        padding: 30px;
-        font-size: 14px;
+        color: var(--text-muted);
+        padding: 40px;
+        background: white;
+        border-radius: var(--border-radius);
+        border: 1px dashed #e0e0e0;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-    <div class="top-nav">
-        <a href="{% url 'home' %}" class="home-btn">←</a>
-        <div class="page-title">Agency Dashboard</div>
-    </div>
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none" style="color: var(--primary-color);">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Agency Dashboard</li>
+        </ol>
+    </nav>
     
-    <div class="dashboard-content">
-        <div class="profile-card">
-            {% if profile.avatar %}
-                <img src="{{ profile.avatar.url }}" alt="Avatar" class="avatar-image">
-            {% else %}
-                <div class="avatar-circle">🏢</div>
-            {% endif %}
-            
-            <div class="agency-name">
-                {% if profile.agency_name %}{{ profile.agency_name }}{% else %}{{ user.username }}{% endif %}
-            </div>
-            
-            {% if profile.phone %}<div class="agency-info">{{ profile.phone }}</div>{% endif %}
-            {% if profile.office_address %}<div class="agency-info">{{ profile.office_address }}</div>{% endif %}
-            
-            <a href="{% url 'edit_agency_profile' %}" class="edit-btn">Edit Profile</a>
-        </div>
-        
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-number">{{ total_properties }}</div>
-                <div class="stat-label">Properties</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">{{ avg_rating|floatformat:1 }}</div>
-                <div class="stat-label">Avg Rating</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">0</div>
-                <div class="stat-label">Views</div>
+    <div class="row">
+        <!-- Sidebar Profile -->
+        <div class="col-lg-4 mb-4 animate-fade-in-up">
+            <div class="profile-card position-sticky" style="top: 90px;">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="Avatar" class="avatar-image">
+                {% else %}
+                    <div class="avatar-circle">🏢</div>
+                {% endif %}
+                
+                <div class="agency-name">
+                    {% if profile.agency_name %}{{ profile.agency_name }}{% else %}{{ user.username }}{% endif %}
+                </div>
+                
+                <div class="my-4">
+                    {% if profile.phone %}
+                        <div class="agency-info"><i class="bi bi-telephone text-primary"></i> {{ profile.phone }}</div>
+                    {% endif %}
+                    {% if profile.office_address %}
+                        <div class="agency-info text-muted mt-2" style="font-size: 14px;"><i class="bi bi-geo-alt text-danger"></i> {{ profile.office_address }}</div>
+                    {% endif %}
+                </div>
+                
+                <a href="{% url 'edit_agency_profile' %}" class="btn btn-primary-custom w-100"><i class="bi bi-pencil"></i> Edit Profile</a>
             </div>
         </div>
         
-        <div class="section-header">
-            <div class="section-title">My Properties ({{ total_properties }})</div>
-        </div>
-        
-        {% if properties %}
-            <div class="scroll-container">
-                {% for property in properties %}
-                <a href="{% url 'property_detail' property.id %}" style="text-decoration: none; color: inherit;">
-                    <div class="property-card">
-                        {% if property.image %}
-                            <img src="{{ property.image.url }}" alt="{{ property.title }}" class="property-image">
-                        {% else %}
-                            <div class="property-image"></div>
-                        {% endif %}
-                        <div class="property-info">
-                            <div class="property-title">{{ property.title }}</div>
-                            <div class="property-price">£{{ property.price }} pw</div>
+        <!-- Main Content -->
+        <div class="col-lg-8 animate-fade-in-up delay-100">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_properties }}</div>
+                    <div class="stat-label">Properties</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ avg_rating|floatformat:1 }}</div>
+                    <div class="stat-label">Avg Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Views</div>
+                </div>
+            </div>
+            
+            <div class="section-header mt-0">
+                <div class="section-title"><i class="bi bi-houses-fill text-primary"></i> My Properties ({{ total_properties }})</div>
+            </div>
+            
+            {% if properties %}
+                <div class="scroll-container">
+                    {% for property in properties %}
+                    <a href="{% url 'property_detail' property.id %}" style="text-decoration: none; color: inherit;">
+                        <div class="property-card">
+                            {% if property.image %}
+                                <img src="{{ property.image.url }}" alt="{{ property.title }}" class="property-image">
+                            {% else %}
+                                <div class="property-image d-flex align-items-center justify-content-center"><i class="bi bi-image text-muted fs-3"></i></div>
+                            {% endif %}
+                            <div class="property-info">
+                                <div class="property-title">{{ property.title }}</div>
+                                <div class="property-price">£{{ property.price }} <span class="text-muted fw-normal fs-6">pw</span></div>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="empty-state">No properties yet</div>
-        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-house-x text-muted fs-1 mb-3 d-block"></i>
+                    No properties listed yet
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

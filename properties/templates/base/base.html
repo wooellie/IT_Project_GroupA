@@ -4,94 +4,253 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}UniNest{% endblock %}</title>
-    <!-- 引入原有的 Bootstrap 5.3.3 -->
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- 引入 Bootstrap Icons CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* 模拟 iPhone 17 背景 */
+        :root {
+            /* Modern, vibrant palette */
+            --primary-color: #6366f1; /* Indigo 500 */
+            --primary-hover: #4f46e5; /* Indigo 600 */
+            --secondary-color: #14b8a6; /* Teal 500 */
+            --accent-color: #f43f5e; /* Rose 500 */
+            --bg-light: #f8fafc; /* Slate 50 */
+            --text-dark: #0f172a; /* Slate 900 */
+            --text-muted: #64748b; /* Slate 500 */
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            
+            /* Refined Shadows */
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(99, 102, 241, 0.15), 0 10px 10px -5px rgba(99, 102, 241, 0.04);
+            
+            /* Smooth transitions */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* Global Animation Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+
+        /* Animation Utility Classes */
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* Hidden by default until animation runs */
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* Staggered Delays for lists/grids */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
+
         body {
-            background-color: #222; /* 网页背景：深灰 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--bg-light);
             min-height: 100vh;
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-dark);
         }
 
-        /* iPhone 17 容器：锁定宽度 */
-        .iphone-screen {
-            width: 430px; /* iPhone 15/16/17 Pro Max 左右的宽度 */
-            height: 932px;
-            background: #fff;
-            position: relative;
-            overflow-y: auto;
-            overflow-x: hidden;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            border: 12px solid #000; /* 模拟手机边框 */
-            border-radius: 55px;
-            scrollbar-width: none; /* 隐藏滚动条 (Firefox) */
-        }
-
-        .iphone-screen::-webkit-scrollbar {
-            display: none; /* 隐藏滚动条 (Chrome/Safari) */
-        }
-
-        /* 状态栏占位（模拟灵动岛高度） */
-        .status-bar {
-            height: 44px;
+        .main-container {
+            flex: 1;
+            background: transparent;
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .modern-navbar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        /* 底部操作栏在容器内定位，不再是 fixed-bottom (window) */
-        .container-bottom-bar {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            z-index: 999;
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        {% block extra_css %}{% endblock %}
-        
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: var(--transition);
+            padding: 8px 16px !important;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary-color);
+            background: rgba(176,128,244,0.05);
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white !important;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 24px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: none !important;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            background-color: #f8f9fa;
+            transition: var(--transition);
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(176, 128, 244, 0.1);
+            outline: none;
+        }
+
     </style>
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <div class="iphone-screen">
-        
-        <div class="status-bar d-flex justify-content-center align-items-end">
-            <div style="width: 120px; height: 35px; background: #000; border-radius: 20px; margin-bottom: 5px;"></div>
+    <nav class="navbar navbar-expand-lg modern-navbar">
+        <div class="container max-w-1200">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-house-door-fill"></i> UniNest
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-search"></i> Find Homes</a>
+                    </li>
+                    
+                    {% if user.is_authenticated %}
+                        {% if user.role == 'agency' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'post_property' %}"><i class="bi bi-plus-circle"></i> Post Property</a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_likes' %}"><i class="bi bi-heart"></i> Saved</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm" style="border-radius: 12px;">
+                                <li><a class="dropdown-item" href="{% url 'dashboard_redirect' %}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{% if user.role == 'agency' %}{% url 'agency_info' %}{% else %}{% url 'user_info' %}{% endif %}">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item text-danger">Logout</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary-custom" href="{% url 'register' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-        <div class="container mt-2">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-danger alert-dismissible fade show small py-2" role="alert" 
-                     style="margin: 10px; border-radius: 10px; font-size: 0.8rem;">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="padding: 0.8rem;"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+    </nav>
 
-
+    <div class="main-container">
+        <!-- Floating Toast Container for Messages -->
+        <div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1060; margin-top: 70px;">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags %}{{ message.tags }}{% else %}info{% endif %} alert-dismissible fade show shadow-md animate-fade-in-up" role="alert" style="min-width: 250px;">
+                        {% if message.tags == 'success' %}<i class="bi bi-check-circle-fill me-2"></i>
+                        {% elif message.tags == 'error' %}<i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-circle-fill me-2"></i>
+                        {% else %}<i class="bi bi-info-circle-fill me-2"></i>{% endif %}
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
         
         {% block content %}
         {% endblock %}
     </div>
-    
 
-
-        ...
-    </div>   
-    
-
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -4,126 +4,146 @@
 
 {% block extra_css %}
 <style>
-.iphone-screen { 
-    background-color: #fff; 
-    color: #000; 
+.page-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    padding: 40px 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 30px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
 }
 
-.header-nav {
-    padding: 15px 20px;
-    background: #fff;
-    border-bottom: 2px solid #b080f4;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+.property-card {
+    background: white;
+    border: none;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: var(--transition);
+    height: 100%;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.property-card a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.property-image-container {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--bg-light);
+}
+
+.property-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.property-no-image {
+    height: 100%;
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
 }
 
-.back-btn {
-    color: #b080f4;
-    text-decoration: none;
-    font-size: 26px;
-    font-weight: bold;
-    line-height: 1;
+.property-details {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
-.page-title {
-    font-size: 20px;
+.property-title {
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #000;
-    letter-spacing: -0.3px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
 }
 
-.card {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 16px;
-    overflow: hidden;
-    transition: all 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(176, 128, 244, 0.15);
-    border-color: #b080f4;
-}
-
-.card a {
-    color: #000;
-    text-decoration: none;
-}
-
-.text-warning {
-    color: #ff9500;
-}
-
-.text-secondary {
-    color: #999;
+.property-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: auto;
 }
 
 .empty-state {
     text-align: center;
     padding: 60px 20px;
-}
-
-.empty-icon {
-    font-size: 4rem;
-    opacity: 0.3;
-}
-
-.btn-explore {
-    background: linear-gradient(135deg, #b080f4, #9060d4);
-    color: white;
-    border: none;
-    padding: 10px 30px;
-    border-radius: 20px;
-    font-weight: 600;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="header-nav">
-    {% if request.GET.from == 'dashboard' %}
-        <a href="{% url 'user_dashboard' %}" class="back-btn">←</a>
-    {% else %}
-        <a href="{% url 'home' %}" class="back-btn">←</a>
-    {% endif %}
-    <div class="page-title">My Likes</div>
-</div>
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                {% if request.GET.from == 'dashboard' %}
+                    <a href="{% url 'user_dashboard' %}" class="text-decoration-none" style="color: var(--primary-color);">Dashboard</a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="text-decoration-none" style="color: var(--primary-color);">Home</a>
+                {% endif %}
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">My Likes</li>
+        </ol>
+    </nav>
 
-<div class="container mt-4 mb-5 px-3">
-    <div class="row">
+    <div class="page-header">
+        <h2><i class="bi bi-heart-fill text-danger"></i> My Liked Properties</h2>
+        <p class="mb-0">Properties you have liked will appear here.</p>
+    </div>
+
+    <div class="row g-4">
         {% for p in properties %}
-        <div class="col-6 mb-3">
-            <div class="card h-100">
+        <div class="col-12 col-md-6 col-lg-4 animate-fade-in-up" style="animation-delay: {{ forloop.counter }}00ms;">
+            <div class="property-card">
                 <a href="{% url 'property_detail' p.id %}">
-                    {% if p.image %}
-                    <img src="{{ p.image.url }}" class="card-img-top" style="height:120px; object-fit:cover;">
-                    {% else %}
-                    <div style="height:120px; background:#f5f5f7;" class="d-flex align-items-center justify-content-center small text-muted">No Image</div>
-                    {% endif %}
+                    <div class="property-image-container">
+                        {% if p.image %}
+                            <img src="{{ p.image.url }}" class="property-image" alt="{{ p.title }}">
+                        {% else %}
+                            <div class="property-no-image"><i class="bi bi-image text-muted" style="font-size: 2rem;"></i></div>
+                        {% endif %}
+                    </div>
 
-                    <div class="card-body p-2 text-center">
-                        <h6 style="font-size: 0.85rem; color:#000;" class="mb-1 text-truncate">{{ p.title }}</h6>
-                        <div class="text-warning small" style="font-size: 0.75rem;">
-                            £{{ p.price }} <span class="text-secondary">pw</span>
+                    <div class="property-details">
+                        <div class="property-title text-truncate">{{ p.title }}</div>
+                        <div class="property-price">
+                            £{{ p.price }} <span class="fs-6 text-muted fw-normal">pw</span>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
         {% empty %}
-        <div class="col-12 empty-state">
-            <div class="empty-icon">❤️</div>
-            <p style="color:#999; margin-top:20px;">You haven't liked any properties yet.</p>
-            <a href="{% url 'home' %}" class="btn-explore">Go Explore</a>
+        <div class="col-12">
+            <div class="empty-state">
+                <i class="bi bi-heart text-muted" style="font-size: 4rem;"></i>
+                <h4 class="mt-3 text-muted">No liked properties</h4>
+                <p class="text-muted">You haven't liked any properties yet.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary-custom mt-3">Go Explore</a>
+            </div>
         </div>
         {% endfor %}
     </div>
 </div>
-
-<div style="height: 60px;"></div>
 {% endblock %}
