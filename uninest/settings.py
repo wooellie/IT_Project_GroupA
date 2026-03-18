@@ -32,12 +32,14 @@ SECRET_KEY = 'django-insecure-=ao*nt*44o*l&ht+1za8iux$$*^y9as@5cz-x%8m8+(7^@+ydo
 DEBUG = False
 
 # ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['18.171.169.58', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['18.171.169.58', 'uninest.website', 'www.uninest.website', 'localhost', '127.0.0.1']
 
 #========以下是为了部署到服务器新增的内容========#
 # 2. 信任该 IP 的提交请求（防止登录时报 CSRF 错误）
 CSRF_TRUSTED_ORIGINS = [
     'http://18.171.169.58',
+    'http://uninest.website',
+    'http://www.uninest.website',
 ]
 
 # 3. 静态文件目录（必须和脚本一致）
